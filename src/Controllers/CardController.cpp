@@ -5,7 +5,7 @@ bool useCard(const CharacterPtr & user,
 			 const CharacterPtr & target,
 			 size_t cardIndex, bool & end)
 {
-	auto card = user->getTableCard(cardIndex);
+	auto card = user->getHandCard(cardIndex);
 	auto cardType = card->getCardType();
 	switch (cardType) {
 	case provision_t::FlareGun: {
