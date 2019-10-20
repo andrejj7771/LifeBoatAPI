@@ -1,0 +1,172 @@
+{
+  "provision" : [
+    {
+      "name" : "Life Preserver",
+      "type" : 1
+    },
+    {
+      "name" : "Compass",
+      "type" : 5
+    },
+    {
+      "name" : "Parasol",
+      "type" : 4
+    },
+    {
+      "name" : "Painting",
+      "type" : 7
+    },
+    {
+      "name" : "Painting",
+      "type" : 7
+    },
+    {
+      "name" : "Painting",
+      "type" : 6
+    },
+    {
+      "name" : "Oar",
+      "type" : 3
+    },
+    {
+      "name" : "Oar",
+      "type" : 3
+    },
+    {
+      "name" : "BlackJack",
+      "type" : 1
+    },
+    {
+      "name" : "Knife",
+      "type" : 13
+    },
+    {
+      "name" : "Gaffing Hook",
+      "type" : 14
+    },
+    {
+      "name" : "Flare Gun",
+      "type" : 0
+    },
+    {
+      "name" : "Bucket Of Chum",
+      "type" : 2
+    },
+    {
+      "name" : "Bucket Of Chum",
+      "type" : 2
+    },
+    {
+      "name" : "Medical Kit",
+      "type" : 10
+    },
+    {
+      "name" : "Medical Kit",
+      "type" : 10
+    },
+    {
+      "name" : "Medical Kit",
+      "type" : 10
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Water",
+      "type" : 11
+    },
+    {
+      "name" : "Jewels",
+      "type" : 8
+    },
+    {
+      "name" : "Jewels",
+      "type" : 8
+    },
+    {
+      "name" : "Jewels",
+      "type" : 8
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    },
+    {
+      "name" : "Bundle Of Cash",
+      "type" : 9
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "navigation" : [
+    {
+      "overboard" : [1, 2, 3, 4, 5, 6],
+      "thirsty" : [1, 2, 3, 4, 5, 6],
+      "bird" : 1,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [1, 2, 3, 4, 5, 6],
+      "thirsty" : [1, 2, 3, 4, 5, 6],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [],
+      "thirsty" : [],
+      "bird" : 1,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [3],
+      "thirsty" : [3],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [3],
+      "thirsty" : [5],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [4],
+      "thirsty" : [1],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [4],
+      "thirsty" : [3, 4],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : true
+    },
+    {
+      "overboard" : [6],
+      "thirsty" : [1, 2, 3, 4, 5],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : true
+    },
+    {
+      "overboard" : [3],
+      "thirsty" : [4],
+      "bird" : 1,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [5],
+      "thirsty" : [3, 4, 1],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [5],
+      "thirsty" : [3, 4, 6],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : true
+    },
+    {
+      "overboard" : [2],
+      "thirsty" : [3, 6],
+      "bird" : 1,
+      "fighters" : false,
+      "rowers" : true
+    },
+    {
+      "overboard" : [2],
+      "thirsty" : [1],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [6],
+      "thirsty" : [2, 3, 4, 5, 6],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [6],
+      "thirsty" : [3, 4, 5, 1],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [5],
+      "thirsty" : [3, 4, 2, 5],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [2],
+      "thirsty" : [3, 4, 5],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [4],
+      "thirsty" : [3, 5],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [6],
+      "thirsty" : [2, 3, 4, 5, 6],
+      "bird" : 1,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [3],
+      "thirsty" : [2],
+      "bird" : 0,
+      "fighters" : true,
+      "rowers" : true
+    },
+    {
+      "overboard" : [1],
+      "thirsty" : [1, 2, 3, 4, 5, 6],
+      "bird" : 2,
+      "fighters" : false,
+      "rowers" : true
+    },
+    {
+      "overboard" : [4],
+      "thirsty" : [6],
+      "bird" : 1,
+      "fighters" : true,
+      "rowers" : false
+    },
+    {
+      "overboard" : [5],
+      "thirsty" : [3, 4, 2],
+      "bird" : 1,
+      "fighters" : false,
+      "rowers" : false
+    },
+    {
+      "overboard" : [2],
+      "thirsty" : [2, 3],
+      "bird" : 0,
+      "fighters" : false,
+      "rowers" : false
+    }
+  ]
+}

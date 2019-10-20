@@ -1,0 +1,40 @@
+{
+  "characters" : [
+    {
+      "type" : 1,
+      "size" : 4,
+      "survival" : 8,
+      "ability" : "Double points from jewels"
+    },
+    {
+      "type" : 2,
+      "size" : 5,
+      "survival" : 7,
+      "ability" : "Double point from paintings"
+    },
+    {
+      "type" : 3,
+      "size" : 7,
+      "survival" : 5,
+      "ability" : "Double points from cash"
+    },
+    {
+      "type" : 4,
+      "size" : 8,
+      "survival" : 4,
+      "ability" : "He's just plain big"
+    },
+    {
+      "type" : 5,
+      "size" : 6,
+      "survival" : 6,
+      "ability" : "Excelent swimmer. No injury from falling overboard"
+    },
+    {
+      "type" : 6,
+      "size" : 3,
+      "survival" : 9,
+      "ability" : "Pickpocket: cannot be refused when mugging for a face down card"
+    }
+  ]
+}
