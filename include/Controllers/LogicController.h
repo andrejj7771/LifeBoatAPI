@@ -45,6 +45,7 @@ class LIFEBOAT_API LogicController {
 	IterationTotalControllerPtr m_iterationTotalController;
 	
 	phase_t m_currentPhase;
+	size_t m_birdsCounter;
 	
 public:
 	
@@ -55,7 +56,7 @@ public:
 	~LogicController() = default;
 	
 	bool init();
-	void nextPhase();
+	void run();
 	
 	const std::vector<CharacterPtr> & getCharacters() const;
 	
@@ -71,6 +72,8 @@ public:
 	void setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query);
 	
 private:
+	
+	void nextPhase();
 	
 	bool initDistributionController(const std::vector<ProvisionCardPtr> & provCards);
 	

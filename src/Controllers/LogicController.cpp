@@ -14,6 +14,7 @@ LogicController::LogicController(const std::vector<CharacterPtr> & characters,
 	m_iterationTotalController(nullptr)
 {
 	m_currentPhase = phase_t::Initialization;
+	m_birdsCounter = 0;
 }
 
 bool LogicController::init() {
@@ -41,40 +42,22 @@ bool LogicController::init() {
 	return true;
 }
 
-void LogicController::nextPhase() {
-	switch (m_currentPhase) {
-		case phase_t::CardDistributionPhase: {
-			m_distributionController->setChracters(m_characters);
-			m_distributionController->execute();
-			
-			m_provisionCards = m_distributionController->getProvisionCards();
-			m_currentPhase = phase_t::MovingPhase;
-			break;
+void LogicController::run() {
+	auto isEverybodyDead = [this]() -> bool {
+		size_t corpseCounter = 0;
+		for (auto character : m_characters) {
+			if (character->isDead())
+				corpseCounter++;
 		}
-		case phase_t::MovingPhase: {
-			m_actionController->setNavigationCards(m_navigationCards);
-			m_actionController->execute();
-			
-			m_characters = m_actionController->getCheracters();
-			m_navigationCards = m_actionController->getNavigationCards();
-			m_currentPhase = phase_t::TotalPhase;
-			break;
-		}
-		case phase_t::TotalPhase: {
-			m_iterationTotalController->setCharacters(m_characters);
-			m_iterationTotalController->setNavigationCards(m_navigationCards);
-			m_iterationTotalController->setFighters(m_actionController->getFighters());
-			m_iterationTotalController->setRowers(m_actionController->getRowers());
-			m_iterationTotalController->setCurrentNavCards(m_actionController->getCurrentNavCards());
-			m_iterationTotalController->execute();
-			
-			m_navigationCards = m_iterationTotalController->getNavigationCards();
-			m_currentPhase = phase_t::CardDistributionPhase;
-			break;
-		}
-		default:
-			return;
+		
+		return corpseCounter == m_characters.size();
+	};
+	
+	while (m_birdsCounter != 4 && !isEverybodyDead()) {
+		nextPhase();
 	}
+	
+	//total
 }
 
 const std::vector<CharacterPtr> & LogicController::getCharacters() const {
@@ -118,6 +101,43 @@ void LogicController::setIterTotalUsingCardQuery(const std::function<ProvisionCa
 
 void LogicController::setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query) {
 	m_iterationTotalController->setHealQuery(query);
+}
+
+void LogicController::nextPhase() {
+	switch (m_currentPhase) {
+		case phase_t::CardDistributionPhase: {
+			m_distributionController->setChracters(m_characters);
+			m_distributionController->execute();
+			
+			m_provisionCards = m_distributionController->getProvisionCards();
+			m_currentPhase = phase_t::MovingPhase;
+			break;
+		}
+		case phase_t::MovingPhase: {
+			m_actionController->setNavigationCards(m_navigationCards);
+			m_actionController->execute();
+			
+			m_characters = m_actionController->getCheracters();
+			m_navigationCards = m_actionController->getNavigationCards();
+			m_currentPhase = phase_t::TotalPhase;
+			break;
+		}
+		case phase_t::TotalPhase: {
+			m_iterationTotalController->setCharacters(m_characters);
+			m_iterationTotalController->setNavigationCards(m_navigationCards);
+			m_iterationTotalController->setFighters(m_actionController->getFighters());
+			m_iterationTotalController->setRowers(m_actionController->getRowers());
+			m_iterationTotalController->setCurrentNavCards(m_actionController->getCurrentNavCards());
+			m_iterationTotalController->execute();
+			
+			m_navigationCards = m_iterationTotalController->getNavigationCards();
+			m_birdsCounter = m_iterationTotalController->getNumBirds();
+			m_currentPhase = phase_t::CardDistributionPhase;
+			break;
+		}
+		default:
+			return;
+	}
 }
 
 bool LogicController::initDistributionController(const std::vector<ProvisionCardPtr> & provCards) {

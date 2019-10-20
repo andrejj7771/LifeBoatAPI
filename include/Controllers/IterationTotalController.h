@@ -51,6 +51,8 @@ public:
 	IterationTotalController();
 	~IterationTotalController() = default;
 	
+	size_t getNumBirds() const;
+	
 	void setCharacters(const std::vector<CharacterPtr> & characters);
 	void setNavigationCards(const std::vector<NavigationCardPtr> & navigationCards);
 	

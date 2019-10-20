@@ -9,6 +9,10 @@ IterationTotalController::IterationTotalController() {
 	m_currentPhase = totalPhase::Unknown;
 }
 
+size_t IterationTotalController::getNumBirds() const {
+	return m_birdCards.size();
+}
+
 void IterationTotalController::setCharacters(const std::vector<CharacterPtr> & characters) {
 	m_characters = characters;
 }
