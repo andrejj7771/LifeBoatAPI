@@ -76,14 +76,18 @@ void LogicController::nextPhase() {
 	}
 }
 
-void LogicController::setDistributionCardSender(const std::function<long(const std::vector<ProvisionCardPtr> &)> & sender) {
+const std::vector<CharacterPtr> & LogicController::getCharacters() const {
+	return m_characters;
+}
+
+void LogicController::setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender) {
 	if (m_distributionController == nullptr)
 		return;
 	
 	m_distributionController->setSender(sender);
 }
 
-void LogicController::setRowingCardSender(const std::function<std::vector<size_t>(const std::vector<NavigationCardPtr> &, const CharacterPtr &)> & sender) {
+void LogicController::setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
 	m_actionController->setRowingCardSender(sender);
 }
 
@@ -107,11 +111,11 @@ void LogicController::setRowingUsingGunQuery(const std::function<bool(const Char
 	m_actionController->setRowingUsingGunQuery(query);
 }
 
-void LogicController::setIterTotalUsingCardQuery(const std::function<const ProvisionCardPtr & (const CharacterPtr &, totalPhase)> & query) {
+void LogicController::setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query) {
 	m_iterationTotalController->setUsingCardQuery(query);
 }
 
-void LogicController::setIterTotalHealQuery(const std::function<const CharacterPtr & (const CharacterPtr &)> & query) {
+void LogicController::setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query) {
 	m_iterationTotalController->setHealQuery(query);
 }
 
@@ -125,10 +129,6 @@ bool LogicController::initDistributionController(const std::vector<CharacterPtr>
 		printf("%s -> %s", __FUNCTION__, error.what());
 		return false;
 	}
-	
-	m_distributionController->setSender([](const std::vector<ProvisionCardPtr> &) -> long {
-		return -1;
-	});
 	
 	return true;
 }

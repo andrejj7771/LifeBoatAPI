@@ -23,8 +23,8 @@ enum class totalPhase : int {
 };
 
 using Sender = std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)>;
-using UsingCardQuery = std::function<const ProvisionCardPtr & (const CharacterPtr &, totalPhase)>;
-using HealQuery = std::function<const CharacterPtr & (const CharacterPtr &)>;
+using UsingCardQuery = std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)>;
+using HealQuery = std::function<CharacterPtr(const CharacterPtr &)>;
 
 class LIFEBOAT_API IterationTotalController {
 	

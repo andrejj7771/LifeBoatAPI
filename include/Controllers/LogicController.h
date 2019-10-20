@@ -57,16 +57,18 @@ public:
 	bool init();
 	void nextPhase();
 	
-	void setDistributionCardSender(const std::function<long(const std::vector<ProvisionCardPtr> &)> & sender);
-	void setRowingCardSender(const std::function<std::vector<size_t>(const std::vector<NavigationCardPtr> &, const CharacterPtr &)> & sender);
+	const std::vector<CharacterPtr> & getCharacters() const;
+	
+	void setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender);
+	void setRowingCardSender(const std::function<std::vector<size_t>( const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	void setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	
 	void setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)> & query);
 	void setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query);
 	void setFightControllerFightQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query);
 	void setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query);
-	void setIterTotalUsingCardQuery(const std::function<const ProvisionCardPtr & (const CharacterPtr &, totalPhase)> & query);
-	void setIterTotalHealQuery(const std::function<const CharacterPtr & (const CharacterPtr &)> & query);
+	void setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query);
+	void setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query);
 	
 private:
 	

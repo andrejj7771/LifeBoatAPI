@@ -48,6 +48,9 @@ void IterationTotalController::setHealQuery(const HealQuery & query) {
 void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
 													  const ProvisionCardPtr & card)
 {
+	if (card == nullptr)
+		return;
+	
 	auto cardType = card->getCardType();
 	auto bind = std::bind(&IterationTotalController::usingCardQueryCallback,
 						  this, std::placeholders::_1, std::placeholders::_2);
@@ -56,10 +59,15 @@ void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
 			sendUsingCardQuery(from, bind);
 		} else {
 			if (cardType == provision_t::Chum) {
-				for (const CharacterPtr & c : m_overboard)
+				for (const CharacterPtr & c : m_overboard) {
+					auto chum = findCardByType(from, provision_t::Chum, false);
+					from->removeCardFromTable(chum);
 					c->incCriticalHit();
+				}
 			} else if (cardType == provision_t::LifePreserver) {
-				sendQuery(from, [](const CharacterPtr & c){
+				sendQuery(from, [&from](const CharacterPtr & c){
+					auto preserver = findCardByType(from, provision_t::LifePreserver, false);
+					from->removeCardFromTable(preserver);
 					c->decCriticalHit();
 				});
 			}
@@ -68,7 +76,9 @@ void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
 		if (cardType != provision_t::Water) {
 			sendUsingCardQuery(from, bind);
 		} else {
-			sendQuery(from, [](const CharacterPtr & c){
+			sendQuery(from, [&from](const CharacterPtr & c){
+				auto water = findCardByType(from, provision_t::Water, true);
+				from->removeCardFromTable(water);
 				c->decWaterHit();
 			});
 		}
@@ -76,7 +86,7 @@ void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
 }
 
 void IterationTotalController::execute() {
-	auto characterIter = m_characters.end();
+	auto characterIter = m_characters.end() - 1;
 	sendCard(*characterIter, [this](size_t index) {
 		auto card = m_currentCards.at(index);
 		
@@ -96,7 +106,7 @@ void IterationTotalController::execute() {
 			convertTypesToCharacters(card->getOverboard(), m_overboard);
 			for (auto character : m_overboard) {
 				if (character->getCharacterType() != character_t::Frenchy &&
-						findCardByType(character, provision_t::LifePreserver, true)) {
+						hasCard(character, provision_t::LifePreserver, true)) {
 					character->incCriticalHit();
 				}
 				
@@ -180,6 +190,6 @@ void IterationTotalController::sendUsingCardQuery(const CharacterPtr & to,
 }
 
 void IterationTotalController::sendQuery(const CharacterPtr & to,
-				   const std::function<void(const CharacterPtr &)> & callback) {
+				const std::function<void(const CharacterPtr &)> & callback) {
 	callback(m_healQuery(to));
 }
