@@ -37,4 +37,7 @@ bin/
 # Build Directory
 build/
 
+# Libs
+include/rapidjson
+
 project/*.pro.user
