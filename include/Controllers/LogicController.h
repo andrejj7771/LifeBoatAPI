@@ -72,8 +72,7 @@ public:
 	
 private:
 	
-	bool initDistributionController(const std::vector<CharacterPtr> & characters,
-									const std::vector<ProvisionCardPtr> & provCards);
+	bool initDistributionController(const std::vector<ProvisionCardPtr> & provCards);
 	
 	bool initActionController(const std::vector<CharacterPtr> & characters,
 							  const std::vector<NavigationCardPtr> & navCards);

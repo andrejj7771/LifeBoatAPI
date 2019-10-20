@@ -23,7 +23,7 @@ bool LogicController::init() {
 		return false;
 	}
 	
-	if (!initDistributionController(m_characters, m_provisionCards)) {
+	if (!initDistributionController(m_provisionCards)) {
 		return false;
 	}
 	
@@ -44,6 +44,7 @@ bool LogicController::init() {
 void LogicController::nextPhase() {
 	switch (m_currentPhase) {
 		case phase_t::CardDistributionPhase: {
+			m_distributionController->setChracters(m_characters);
 			m_distributionController->execute();
 			
 			m_provisionCards = m_distributionController->getProvisionCards();
@@ -119,11 +120,9 @@ void LogicController::setIterTotalHealQuery(const std::function<CharacterPtr(con
 	m_iterationTotalController->setHealQuery(query);
 }
 
-bool LogicController::initDistributionController(const std::vector<CharacterPtr> & characters,
-										 const std::vector<ProvisionCardPtr> & provCards)
-{
+bool LogicController::initDistributionController(const std::vector<ProvisionCardPtr> & provCards) {
 	try {
-		m_distributionController = std::make_shared<CardDistributionController>(characters, provCards);
+		m_distributionController = std::make_shared<CardDistributionController>(provCards);
 	}
 	catch (const std::exception & error) {
 		printf("%s -> %s", __FUNCTION__, error.what());

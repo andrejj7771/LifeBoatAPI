@@ -4,11 +4,13 @@
 #include <algorithm>
 #include <functional>
 
-CardDistributionController::CardDistributionController(const std::vector<CharacterPtr> & characters,
-													   const std::vector<ProvisionCardPtr> & provCards) :
-	m_characters(characters),
+CardDistributionController::CardDistributionController(const std::vector<ProvisionCardPtr> & provCards) :
 	m_provisionCards(provCards)
 {}
+
+void CardDistributionController::setChracters(const std::vector<CharacterPtr> & characters) {
+	m_characters = characters;
+}
 
 const std::vector<ProvisionCardPtr> & CardDistributionController::getProvisionCards() const {
 	return m_provisionCards;

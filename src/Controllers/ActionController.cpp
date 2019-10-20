@@ -14,6 +14,7 @@ ActionController::ActionController(const std::vector<CharacterPtr> & characters,
 	m_fightController(nullptr),
 	m_rowingCotroller(nullptr),
 	m_characters(characters),
+	m_newSequence(characters),
 	m_navigationCards(navCards)
 {}
 
@@ -92,6 +93,8 @@ void ActionController::execute() {
 		});
 		data.clear();
 	}
+	
+	m_characters = m_newSequence;
 }
 
 void ActionController::RobCharacter(const CharacterPtr & subject,
@@ -140,19 +143,19 @@ void ActionController::RobCharacter(const CharacterPtr & subject,
 
 void ActionController::SwapPlaces(const CharacterPtr & subject,
 								  const CharacterPtr & object) {
-	auto sIter = std::find(m_characters.begin(), m_characters.end(), subject);
-	auto oIter = std::find(m_characters.begin(), m_characters.end(), object);
+	auto sIter = std::find(m_newSequence.begin(), m_newSequence.end(), subject);
+	auto oIter = std::find(m_newSequence.begin(), m_newSequence.end(), object);
 	
 	if (object->isUnconscious() || object->isDead()) {
-		std::swap(sIter, oIter);
+		std::swap(*sIter, *oIter);
 	} else {
 		sendFightQuery(subject, object, [this, &sIter, &oIter](bool result) {
 			if (!result) {
-				std::swap(sIter, oIter);
+				std::swap(*sIter, *oIter);
 			} else {
 				m_fightController->startFight(*sIter, *oIter);
 				if (m_fightController->getWinner() == *sIter) {
-					std::swap(sIter, oIter);
+					std::swap(*sIter, *oIter);
 				}
 			}
 		});

@@ -48,6 +48,7 @@ class LIFEBOAT_API ActionController {
 	RowingControllerPtr m_rowingCotroller;
 	
 	std::vector<CharacterPtr> m_characters;
+	std::vector<CharacterPtr> m_newSequence;
 	std::vector<NavigationCardPtr> m_navigationCards;
 	
 	std::function<void(const CharacterPtr &, ActionData & data)> m_actionQuery;

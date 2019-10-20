@@ -26,11 +26,11 @@ class LIFEBOAT_API CardDistributionController {
 	
 public:
 	
-	CardDistributionController(const std::vector<CharacterPtr> & characters,
-							   const std::vector<ProvisionCardPtr> & provCards);
+	CardDistributionController(const std::vector<ProvisionCardPtr> & provCards);
 	
 	~CardDistributionController() = default;
 	
+	void setChracters(const std::vector<CharacterPtr> & characters);
 	const std::vector<ProvisionCardPtr> & getProvisionCards() const;
 	
 	void execute();
