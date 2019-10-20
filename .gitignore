@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Bin Directory
+bin/
+
+# Build Directory
+build/
+
+project/*.pro.user
