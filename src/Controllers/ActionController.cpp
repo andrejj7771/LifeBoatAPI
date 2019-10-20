@@ -110,11 +110,7 @@ void ActionController::RobCharacter(const CharacterPtr & subject,
 		subject->appendCardToHand(card);
 	} else {
 		if (subject->getCharacterType() == character_t::Kid && hand == true) {
-			if (hand == true) {
-				object->removeCardFromHand(card);
-			} else {
-				object->removeCardFromTable(card);
-			}
+			object->removeCardFromHand(card);
 			subject->appendCardToHand(card);
 		} else {
 			sendFightQuery(subject, object, [this, &subject, &object, &card, hand](bool result) {
