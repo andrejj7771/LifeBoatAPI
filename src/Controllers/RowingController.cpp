@@ -36,7 +36,6 @@ void RowingController::startRawing() {
 	sendCards(cards, m_character, [this, &cards](const std::vector<size_t> & indices) mutable {
 		for (size_t index : indices) {
 			m_currentCards.push_back(cards.at(index));
-			cards.erase(cards.begin() + static_cast<long>(index));
 			for (auto card : cards) {
 				m_navigationCards.push_back(card);
 			}

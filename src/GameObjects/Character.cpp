@@ -15,6 +15,7 @@ Character::Character() :
 	m_criticalHit = 0;
 	
 	m_isDead = false;
+	m_isUnconscious = false;
 	
 	m_enemy = nullptr;
 	m_friend = nullptr;
