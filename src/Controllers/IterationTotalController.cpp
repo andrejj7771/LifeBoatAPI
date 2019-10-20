@@ -86,10 +86,13 @@ void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
 }
 
 void IterationTotalController::execute() {
-	auto characterIter = m_characters.end() - 1;
-	sendCard(*characterIter, [this](size_t index) {
-		auto card = m_currentCards.at(index);
-		
+	if (m_currentCards.size() == 0) {
+		auto firstCard = m_navigationCards.begin();
+		m_currentCards.push_back(*firstCard);
+		m_navigationCards.erase(firstCard);
+	}
+	
+	auto solve = [this](const NavigationCardPtr & card, size_t index){
 		if (card->plusBird()) {
 			m_birdCards.push_back(card);
 			m_currentCards.erase(m_currentCards.begin() + static_cast<long>(index));
@@ -153,7 +156,17 @@ void IterationTotalController::execute() {
 			
 			m_currentPhase = totalPhase::Unknown;
 		}
-	});
+	};
+	if (m_currentCards.size() == 1) {
+		solve(*m_currentCards.begin(), 0);
+	} else {
+		auto characterIter = m_characters.end() - 1;
+		sendCard(*characterIter, [this, solve](size_t index) {
+			auto card = m_currentCards.at(index);
+			solve(card, index);
+		});
+	}
+	
 	m_fighters.clear();
 	m_rowers.clear();
 	m_overboard.clear();
