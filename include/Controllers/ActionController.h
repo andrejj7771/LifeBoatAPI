@@ -27,8 +27,6 @@ struct ActionData {
 	size_t cardIndex;
 	bool hand;
 	
-	
-	
 	ActionData() {
 		clear();
 	}

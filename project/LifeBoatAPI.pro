@@ -30,6 +30,7 @@ SOURCES += $$PWD/../src/Controllers/RowingController.cpp
 SOURCES += $$PWD/../src/Controllers/FightController.cpp
 SOURCES += $$PWD/../src/Controllers/LogicController.cpp
 SOURCES += $$PWD/../src/Controllers/StartController.cpp
+SOURCES += $$PWD/../src/Controllers/TotalController.cpp
 SOURCES += $$PWD/../src/Controllers/CardController.cpp
 
 HEADERS += $$PWD/../include/LifeboatAPI_global.h
@@ -46,4 +47,5 @@ HEADERS += $$PWD/../include/Controllers/RowingController.h
 HEADERS += $$PWD/../include/Controllers/FightController.h
 HEADERS += $$PWD/../include/Controllers/LogicController.h
 HEADERS += $$PWD/../include/Controllers/StartController.h
+HEADERS += $$PWD/../include/Controllers/TotalController.h
 HEADERS += $$PWD/../include/Controllers/CardController.h
