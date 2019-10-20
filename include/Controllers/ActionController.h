@@ -106,6 +106,8 @@ private:
 						const CharacterPtr & object,
 						const std::function<void(bool)> & callback);
 	
+	void callback(ActionData & data, std::vector<CharacterPtr>::iterator & current);
+	
 };
 
 #endif // MOVINGCONTROLLER_H

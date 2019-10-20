@@ -79,17 +79,7 @@ void ActionController::execute() {
 	ActionData data;
 	while (current != m_characters.end()) {
 		sendActionQuery(*current, data, [this, &current](ActionData & data){
-			if (data.actionType == 1) {
-				RobCharacter(*current, data.object, data.cardIndex, data.hand);
-			} else if (data.actionType == 2) {
-				SwapPlaces(*current, data.object);
-			} else if (data.actionType == 3) {
-				Rowing(*current);
-			} else if (data.actionType == 4) {
-				bool end = false;
-				UseCard(*current, data.object, data.cardIndex, end);
-			}
-			current++;
+			callback(data, current);
 		});
 		data.clear();
 	}
@@ -206,3 +196,21 @@ void ActionController::sendFightQuery(const CharacterPtr & subject,
 	callback(m_fightQuery(subject, object));
 }
 
+void ActionController::callback(ActionData & data, std::vector<CharacterPtr>::iterator & current) {
+	if (data.actionType == 1) {
+		RobCharacter(*current, data.object, data.cardIndex, data.hand);
+	} else if (data.actionType == 2) {
+		SwapPlaces(*current, data.object);
+	} else if (data.actionType == 3) {
+		Rowing(*current);
+	} else if (data.actionType == 4) {
+		bool end = false;
+		UseCard(*current, data.object, data.cardIndex, end);
+		if (!end) {
+			sendActionQuery(*current, data, [this, &current](ActionData & data){
+				callback(data, current);
+			});
+		}
+	}
+	current++;
+}
