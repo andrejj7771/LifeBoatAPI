@@ -49,7 +49,7 @@ void ActionController::setFightQuery(const std::function<bool(const CharacterPtr
 	m_fightQuery = query;
 }
 
-void ActionController::setRowingCardSender(const std::function<std::vector<size_t>(const std::vector<NavigationCardPtr> &, const CharacterPtr &)> & sender) {
+void ActionController::setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
 	m_rowingCotroller->setCardSender(sender);
 }
 

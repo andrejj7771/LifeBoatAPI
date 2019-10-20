@@ -13,8 +13,7 @@ class NavigationCard;
 using CharacterPtr = std::shared_ptr<Character>;
 using NavigationCardPtr = std::shared_ptr<NavigationCard>;
 
-using Sender = std::function<std::vector<size_t>(const std::vector<NavigationCardPtr> &,
-													const CharacterPtr &)>;
+using Sender = std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)>;
 using Query = std::function<bool(const CharacterPtr &)>;
 
 class LIFEBOAT_API RowingController {
@@ -48,8 +47,8 @@ private:
 	
 	std::vector<NavigationCardPtr> getCurrentCards();
 	
-	void sendCards(const std::vector<NavigationCardPtr> & cards,
-				   const CharacterPtr & to,
+	void sendCards(const CharacterPtr & to,
+				   const std::vector<NavigationCardPtr> & cards,
 				   const std::function<void(const std::vector<size_t> &)> & callback);
 	
 	void sendUsingGunQuery(const CharacterPtr & sendTo,

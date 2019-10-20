@@ -13,7 +13,7 @@ class ProvisionCard;
 using CharacterPtr = std::shared_ptr<Character>;
 using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
 
-using senderFunction = std::function<long(const std::vector<ProvisionCardPtr> &)>;
+using senderFunction = std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)>;
 using callbackFunction = std::function<void(long)>;
 
 class LIFEBOAT_API CardDistributionController {
@@ -22,7 +22,7 @@ class LIFEBOAT_API CardDistributionController {
 	std::vector<ProvisionCardPtr> m_provisionCards;
 	
 	/// this function should return the index of chosen card
-	std::function<long(const std::vector<ProvisionCardPtr> &)> m_sender;
+	std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> m_sender;
 	
 public:
 	
@@ -39,7 +39,8 @@ public:
 private:
 	
 	std::vector<ProvisionCardPtr> getCurrentCards();
-	void sendCards(const std::vector<ProvisionCardPtr> & cards,
+	void sendCards(const CharacterPtr & to,
+				   const std::vector<ProvisionCardPtr> & cards,
 				   const callbackFunction & callback);
 	
 	

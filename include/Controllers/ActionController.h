@@ -71,7 +71,7 @@ public:
 	void setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)>& query);
 	void setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query);
 	
-	void setRowingCardSender(const std::function<std::vector<size_t>(const std::vector<NavigationCardPtr> &, const CharacterPtr &)> & sender);
+	void setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	void setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query);
 	void setFightingQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query);
 	

@@ -23,7 +23,7 @@ void CardDistributionController::execute() {
 		if (cards.size() == 0)
 			break;
 		
-		sendCards(cards,
+		sendCards(*currentCharacter, cards,
 				  [&cards, &currentCharacter](long index) mutable
 		{
 			if (index < 0) {
@@ -32,9 +32,9 @@ void CardDistributionController::execute() {
 			}
 			
 			auto it = cards.begin() + index;
-			cards.erase(it);
 			
 			(*currentCharacter)->appendCardToHand(*it);
+			cards.erase(it);
 			currentCharacter++;
 		});
 	}
@@ -45,10 +45,11 @@ void CardDistributionController::setSender(const senderFunction & func) {
 	m_sender = func;
 }
 
-void CardDistributionController::sendCards(const std::vector<ProvisionCardPtr> & cards,
+void CardDistributionController::sendCards(const CharacterPtr & to,
+										   const std::vector<ProvisionCardPtr> & cards,
 										   const callbackFunction & callback)
 {
-	callback(m_sender(cards));
+	callback(m_sender(to, cards));
 }
 
 std::vector<ProvisionCardPtr> CardDistributionController::getCurrentCards() {

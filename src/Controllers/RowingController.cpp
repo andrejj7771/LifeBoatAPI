@@ -33,7 +33,7 @@ void RowingController::setCharacter(const CharacterPtr & character) {
 
 void RowingController::startRawing() {
 	std::vector<NavigationCardPtr> cards = getCurrentCards();
-	sendCards(cards, m_character, [this, &cards](const std::vector<size_t> & indices) mutable {
+	sendCards(m_character, cards, [this, &cards](const std::vector<size_t> & indices) mutable {
 		for (size_t index : indices) {
 			m_currentCards.push_back(cards.at(index));
 			for (auto card : cards) {
@@ -51,22 +51,22 @@ std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
 		auto card = m_character->getTableCard(i);
 		auto cardType = card->getCardType();
 		switch (cardType) {
-			case provision_t::Oar:
-			case provision_t::Compass: {
-				counter++;
-				break;
-			}
-			case provision_t::FlareGun: {
-				sendUsingGunQuery(m_character, [this, &counter, &card](bool result){
-					if (result) {
-						m_character->removeCardFromTable(card);
-						counter++;
-					}
-				});
-				break;
-			}
-			default:
-				continue;
+		case provision_t::Oar:
+		case provision_t::Compass: {
+			counter++;
+			break;
+		}
+		case provision_t::FlareGun: {
+			sendUsingGunQuery(m_character, [this, &counter, &card](bool result){
+				if (result) {
+					m_character->removeCardFromTable(card);
+					counter++;
+				}
+			});
+			break;
+		}
+		default:
+			continue;
 		}
 	}
 	
@@ -79,10 +79,10 @@ std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
 	return cards;
 }
 
-void RowingController::sendCards(const std::vector<NavigationCardPtr> & cards,
-								 const CharacterPtr & to,
+void RowingController::sendCards(const CharacterPtr & to,
+								 const std::vector<NavigationCardPtr> & cards,
 								 const std::function<void(const std::vector<size_t> &)> & callback) {
-	callback(m_cardSender(cards, to));
+	callback(m_cardSender(to, cards));
 }
 
 void RowingController::sendUsingGunQuery(const CharacterPtr & sendTo,
