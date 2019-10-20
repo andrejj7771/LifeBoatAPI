@@ -85,8 +85,8 @@ bool useCard(const CharacterPtr & user,
 	return true;
 }
 
-bool findCardByType(const CharacterPtr & character,
-					provision_t type, bool hand) {
+bool hasCard(const CharacterPtr & character,
+			 provision_t type, bool hand) {
 	size_t size = hand ? character->getNumHandCards() : character->getNumTableCards();
 	for (size_t i = 0; i < size; ++i) {
 		auto card = hand ? character->getHandCard(i) : character->getTableCard(i);
@@ -95,5 +95,18 @@ bool findCardByType(const CharacterPtr & character,
 	}
 	
 	return false;
+}
+
+ProvisionCardPtr findCardByType(const CharacterPtr & character,
+										provision_t type, bool hand) {
+	size_t size = hand ? character->getNumHandCards() : character->getNumTableCards();
+	for (size_t i = 0; i < size; ++i) {
+		auto card = hand ? character->getHandCard(i) : character->getTableCard(i);
+		if (card->getCardType() == type) {
+			return card;
+		}
+	}
+	
+	return nullptr;
 }
 
