@@ -10,7 +10,7 @@
 
 #include <rapidjson/document.h>
 
-const static std::string DATA_PATH = "data/";
+const static std::string DATA_PATH = "../data/";
 
 class Character;
 class NavigationCard;
