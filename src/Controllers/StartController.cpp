@@ -95,7 +95,11 @@ bool StartController::loadCharacters(std::vector<CharacterPtr> & characters) {
 	std::mt19937 g(rd());
 	std::uniform_int_distribution<size_t> uni(0, m_characters.size() - 1);
 	
-	for (size_t i = 0; i <= m_characters.size() - size_t(m_numPlayers); ++i) {
+	size_t size = m_characters.size() - size_t(m_numPlayers);
+	if (size == 0)
+		return true;
+	
+	for (size_t i = 0; i <= size; ++i) {
 		size_t randomValue = uni(g);
 		m_characters.erase(m_characters.begin() + unsigned(randomValue));
 	}
