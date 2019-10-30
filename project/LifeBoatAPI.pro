@@ -35,6 +35,8 @@ SOURCES += $$PWD/../src/Controllers/CardController.cpp
 
 HEADERS += $$PWD/../include/LifeboatAPI_global.h
 
+HEADERS += $$PWD/../include/Utils/Callback.h
+
 HEADERS += $$PWD/../include/GameObjects/GameObject.h
 HEADERS += $$PWD/../include/GameObjects/Character.h
 HEADERS += $$PWD/../include/GameObjects/NavigationCard.h
