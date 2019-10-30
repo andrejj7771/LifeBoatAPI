@@ -5,7 +5,9 @@
 
 #include <algorithm>
 
-IterationTotalController::IterationTotalController() {
+IterationTotalController::IterationTotalController() :
+	m_cardCallback(std::make_shared<ITC_CardCallback>("ITC_CardCallback"))
+{
 	m_currentPhase = totalPhase::Unknown;
 }
 
@@ -33,20 +35,12 @@ void IterationTotalController::setCurrentNavCards(const std::vector<NavigationCa
 	m_currentCards = cards;
 }
 
+ITC_CardCallbackPtr IterationTotalController::getITC_CardCallback() const {
+	return m_cardCallback;
+}
+
 const std::vector<NavigationCardPtr> & IterationTotalController::getNavigationCards() const {
 	return m_navigationCards;
-}
-
-void IterationTotalController::setCardSender(const Sender & sender) {
-	m_cardSender = sender;
-}
-
-void IterationTotalController::setUsingCardQuery(const UsingCardQuery & query) {
-	m_usingCardQuery = query;
-}
-
-void IterationTotalController::setHealQuery(const HealQuery & query) {
-	m_healQuery = query;
 }
 
 void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
@@ -165,10 +159,11 @@ void IterationTotalController::execute() {
 		solve(*m_currentCards.begin(), 0);
 	} else {
 		auto characterIter = m_characters.end() - 1;
-		sendCard(*characterIter, [this, solve](size_t index) {
+		m_cardCallback->setReceiver([this, solve](size_t index) {
 			auto card = m_currentCards.at(index);
 			solve(card, index);
 		});
+		m_cardCallback->send(*characterIter);
 	}
 	
 	m_fighters.clear();
@@ -190,11 +185,6 @@ void IterationTotalController::convertTypesToCharacters(const std::vector<charac
 			}
 		}
 	}
-}
-
-void IterationTotalController::sendCard(const CharacterPtr & to,
-										const std::function<void(size_t)> & callback) {
-	callback(m_cardSender(to, m_currentCards));
 }
 
 void IterationTotalController::sendUsingCardQuery(const CharacterPtr & to,

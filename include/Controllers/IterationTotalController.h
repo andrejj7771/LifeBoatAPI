@@ -3,12 +3,15 @@
 
 #include "LifeboatAPI_global.h"
 
-#include "GameObjects/Character.h"
+#include "Utils/Callback.h"
 
 #include <functional>
 #include <memory>
 #include <vector>
 
+enum class character_t : int;
+
+class Character;
 class ProvisionCard;
 class NavigationCard;
 
@@ -22,9 +25,11 @@ enum class totalPhase : int {
 	Dehydration = 1
 };
 
-using Sender = std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)>;
+using ITC_CardCallback = Callback<size_t, const CharacterPtr&>;
 using UsingCardQuery = std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)>;
 using HealQuery = std::function<CharacterPtr(const CharacterPtr &)>;
+
+using ITC_CardCallbackPtr = std::shared_ptr<ITC_CardCallback>;
 
 class LIFEBOAT_API IterationTotalController {
 	
@@ -38,7 +43,7 @@ class LIFEBOAT_API IterationTotalController {
 	std::vector<CharacterPtr> m_overboard;
 	std::vector<CharacterPtr> m_dehydrated;
 	
-	Sender m_cardSender;
+	ITC_CardCallbackPtr m_cardCallback;
 	UsingCardQuery m_usingCardQuery;
 	HealQuery m_healQuery;
 	
@@ -60,11 +65,9 @@ public:
 	void setRowers(const std::vector<CharacterPtr> & rowers);
 	void setCurrentNavCards(const std::vector<NavigationCardPtr> & cards);
 	
-	const std::vector<NavigationCardPtr> & getNavigationCards() const;
+	ITC_CardCallbackPtr getITC_CardCallback() const;
 	
-	void setCardSender(const Sender & sender);
-	void setUsingCardQuery(const UsingCardQuery & query);
-	void setHealQuery(const HealQuery & query);
+	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	
 	void execute();
 	
@@ -76,7 +79,6 @@ private:
 	void usingCardQueryCallback(const CharacterPtr & from,
 								const ProvisionCardPtr & card);
 	
-	void sendCard(const CharacterPtr & to, const std::function<void(size_t)> & usingCardQueryCallback);
 	void sendUsingCardQuery(const CharacterPtr & to,
 							const std::function<void(const CharacterPtr &,
 													 const ProvisionCardPtr &)> & usingCardQueryCallback);

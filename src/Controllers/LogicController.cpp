@@ -90,16 +90,19 @@ RC_GunCallbackPtr LogicController::getRC_GunCallback() const {
 	return m_actionController->getRC_GunCallback();
 }
 
+//TODO: replace it with callback
 void LogicController::setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
-	m_iterationTotalController->setCardSender(sender);
+//	m_iterationTotalController->setCardSender(sender);
 }
 
+//TODO: replace it with callback
 void LogicController::setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query) {
-	m_iterationTotalController->setUsingCardQuery(query);
+//	m_iterationTotalController->setUsingCardQuery(query);
 }
 
+//TODO: replace it with callback
 void LogicController::setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query) {
-	m_iterationTotalController->setHealQuery(query);
+//	m_iterationTotalController->setHealQuery(query);
 }
 
 void LogicController::nextPhase() {
