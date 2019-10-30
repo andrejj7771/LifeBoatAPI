@@ -15,15 +15,15 @@ class ProvisionCard;
 using CharacterPtr = std::shared_ptr<Character>;
 using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
 
-using callback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
-using CallbackPtr = std::shared_ptr<callback>;
+using DC_Callback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
+using DC_CallbackPtr = std::shared_ptr<DC_Callback>;
 
 class LIFEBOAT_API CardDistributionController {
 	
 	std::vector<CharacterPtr> m_characters;
 	std::vector<ProvisionCardPtr> m_provisionCards;
 	
-	CallbackPtr m_callback;
+	DC_CallbackPtr m_callback;
 	
 public:
 	
@@ -34,7 +34,7 @@ public:
 	void setChracters(const std::vector<CharacterPtr> & characters);
 	const std::vector<ProvisionCardPtr> & getProvisionCards() const;
 	
-	CallbackPtr getCallback() const;
+	DC_CallbackPtr getCallback() const;
 	
 	void execute();
 	

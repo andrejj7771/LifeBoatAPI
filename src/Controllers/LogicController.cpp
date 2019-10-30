@@ -1,3 +1,5 @@
+#include "GameObjects/Character.h"
+
 #include "Controllers/LogicController.h"
 #include "Controllers/ActionController.h"
 #include "Controllers/IterationTotalController.h"
@@ -64,32 +66,32 @@ const std::vector<CharacterPtr> & LogicController::getCharacters() const {
 	return m_characters;
 }
 
-distributionCallbackPtr LogicController::getDistributionCallback() const {
+AC_ActionCallbackPtr LogicController::getAC_ActionCallback() const {
+	return m_actionController->getAC_ActionCallback();
+}
+
+AC_FightCallbackPtr LogicController::getAC_FightCallback() const {
+	return m_actionController->getAC_FightCallback();
+}
+
+DC_CallbackPtr LogicController::getDC_Callback() const {
 	return m_distributionController->getCallback();
 }
 
-void LogicController::setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
-	m_actionController->setRowingCardSender(sender);
+FC_CallbackPtr LogicController::getFC_Callback() const {
+	return m_actionController->getFC_Callback();
+}
+
+RC_CardCallbackPtr LogicController::getRC_CardCallback() const {
+	return m_actionController->getRC_CardCallback();
+}
+
+RC_GunCallbackPtr LogicController::getRC_GunCallback() const {
+	return m_actionController->getRC_GunCallback();
 }
 
 void LogicController::setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
 	m_iterationTotalController->setCardSender(sender);
-}
-
-void LogicController::setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)> & query) {
-	m_actionController->setActionQuery(query);
-}
-
-void LogicController::setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query) {
-	m_actionController->setFightQuery(query);
-}
-
-void LogicController::setFightControllerFightQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query) {
-	m_actionController->setFightingQuery(query);
-}
-
-void LogicController::setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query) {
-	m_actionController->setRowingUsingGunQuery(query);
 }
 
 void LogicController::setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query) {

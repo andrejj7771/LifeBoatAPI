@@ -15,8 +15,9 @@ ActionController::ActionController(const std::vector<CharacterPtr> & characters,
 	m_rowingCotroller(nullptr),
 	m_characters(characters),
 	m_newSequence(characters),
-	m_navigationCards(navCards)
-{}
+	m_navigationCards(navCards),
+	m_actionCallback(std::make_shared<AC_ActionCallback>("AC_ActionCallback")),
+	m_fightCallback(std::make_shared<AC_FightCallback>("AC_FightCallback")) {}
 
 const std::vector<CharacterPtr> & ActionController::getCheracters() const {
 	return m_characters;
@@ -42,24 +43,24 @@ const std::vector<NavigationCardPtr> & ActionController::getCurrentNavCards() co
 	return m_rowingCotroller->getCurrentNavCards();
 }
 
-void ActionController::setActionQuery(const std::function<void(const CharacterPtr &, ActionData &)> & query) {
-	m_actionQuery = query;
+AC_ActionCallbackPtr ActionController::getAC_ActionCallback() const {
+	return m_actionCallback;
 }
 
-void ActionController::setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query) {
-	m_fightQuery = query;
+AC_FightCallbackPtr ActionController::getAC_FightCallback() const {
+	return m_fightCallback;
 }
 
-void ActionController::setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
-	m_rowingCotroller->setCardSender(sender);
+RC_CardCallbackPtr ActionController::getRC_CardCallback() const {
+	return m_rowingCotroller->getCardCallback();
 }
 
-void ActionController::setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query) {
-	m_rowingCotroller->setUsingGunQuery(query);
+RC_GunCallbackPtr ActionController::getRC_GunCallback() const {
+	return m_rowingCotroller->getGunCallback();
 }
 
-void ActionController::setFightingQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query) {
-	m_fightController->setFightQuery(query);
+FC_CallbackPtr ActionController::getFC_Callback() const {
+	return m_fightController->getCallback();
 }
 
 bool ActionController::init() {
@@ -78,9 +79,10 @@ void ActionController::execute() {
 	auto current = m_characters.begin();
 	ActionData data;
 	while (current != m_characters.end()) {
-		sendActionQuery(*current, data, [this, &current](ActionData & data){
+		m_actionCallback->setReceiver([this, &current](ActionData & data){
 			callback(data, current);
 		});
+		m_actionCallback->send(*current);
 		data.clear();
 	}
 	
@@ -103,8 +105,8 @@ void ActionController::RobCharacter(const CharacterPtr & subject,
 			object->removeCardFromHand(card);
 			subject->appendCardToHand(card);
 		} else {
-			sendFightQuery(subject, object, [this, &subject, &object, &card, hand](bool result) {
-				if (!result) {
+			m_fightCallback->setReceiver([this, &subject, &object, &card, hand](bool res){
+				if (!res) {
 					if (hand == true) {
 						object->removeCardFromHand(card);
 					} else {
@@ -123,6 +125,7 @@ void ActionController::RobCharacter(const CharacterPtr & subject,
 					}
 				}
 			});
+			m_fightCallback->send(subject, object);
 		}
 	}
 }
@@ -135,7 +138,7 @@ void ActionController::SwapPlaces(const CharacterPtr & subject,
 	if (object->isUnconscious() || object->isDead()) {
 		std::swap(*sIter, *oIter);
 	} else {
-		sendFightQuery(subject, object, [this, &sIter, &oIter](bool result) {
+		m_fightCallback->setReceiver([this, &sIter, &oIter](bool result) {
 			if (!result) {
 				std::swap(*sIter, *oIter);
 			} else {
@@ -145,6 +148,7 @@ void ActionController::SwapPlaces(const CharacterPtr & subject,
 				}
 			}
 		});
+		m_fightCallback->send(subject, object);
 	}
 }
 
@@ -183,19 +187,6 @@ bool ActionController::initRowingController() {
 	return true;
 }
 
-void ActionController::sendActionQuery(const CharacterPtr & to,
-									   ActionData & data,
-									   const std::function<void(ActionData &)> & callback) {
-	m_actionQuery(to, data);
-	callback(data);
-}
-
-void ActionController::sendFightQuery(const CharacterPtr & subject,
-									  const CharacterPtr & object,
-									  const std::function<void(bool)> & callback) {
-	callback(m_fightQuery(subject, object));
-}
-
 void ActionController::callback(ActionData & data, std::vector<CharacterPtr>::iterator & current) {
 	if (data.actionType == 1) {
 		RobCharacter(*current, data.object, data.cardIndex, data.hand);
@@ -207,9 +198,10 @@ void ActionController::callback(ActionData & data, std::vector<CharacterPtr>::it
 		bool end = false;
 		UseCard(*current, data.object, data.cardIndex, end);
 		if (!end) {
-			sendActionQuery(*current, data, [this, &current](ActionData & data){
+			m_actionCallback->setReceiver([this, &current](ActionData & data){
 				callback(data, current);
 			});
+			m_actionCallback->send(*current);
 		}
 	}
 	current++;

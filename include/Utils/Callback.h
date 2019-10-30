@@ -1,11 +1,13 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
+#include "LifeboatAPI_global.h"
+
 #include <functional>
 #include <condition_variable>
 
 template<typename ret, typename ... args>
-class Callback {
+class LIFEBOAT_API Callback {
 	
 	std::mutex m_mutex;
 	std::condition_variable m_cv;

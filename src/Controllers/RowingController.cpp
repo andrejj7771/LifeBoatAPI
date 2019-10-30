@@ -4,16 +4,9 @@
 
 RowingController::RowingController(const std::vector<NavigationCardPtr> & navCards) :
 	m_character(nullptr),
-	m_navigationCards(navCards)
-{}
-
-void RowingController::setCardSender(const Sender & sender) {
-	m_cardSender = sender;
-}
-
-void RowingController::setUsingGunQuery(const Query & query) {
-	m_usingGunQuery = query;
-}
+	m_navigationCards(navCards),
+	m_cardCallback(std::make_shared<RC_CardCallback>("RC_CardCallback")),
+	m_gunCallback(std::make_shared<RC_GunCallback>("RC_GunCallback")) {}
 
 const std::vector<NavigationCardPtr> & RowingController::getNavigationCards() const {
 	return m_navigationCards;
@@ -33,7 +26,7 @@ void RowingController::setCharacter(const CharacterPtr & character) {
 
 void RowingController::startRawing() {
 	std::vector<NavigationCardPtr> cards = getCurrentCards();
-	sendCards(m_character, cards, [this, &cards](const std::vector<size_t> & indices) mutable {
+	m_cardCallback->setReceiver([this, &cards](const std::vector<size_t> & indices){
 		for (size_t index : indices) {
 			m_currentCards.push_back(cards.at(index));
 			for (auto card : cards) {
@@ -41,6 +34,7 @@ void RowingController::startRawing() {
 			}
 		}
 	});
+	m_cardCallback->send(m_character, cards);
 }
 
 std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
@@ -57,12 +51,13 @@ std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
 			break;
 		}
 		case provision_t::FlareGun: {
-			sendUsingGunQuery(m_character, [this, &counter, &card](bool result){
-				if (result) {
+			m_gunCallback->setReceiver([this, &counter, &card](bool res){
+				if (res) {
 					m_character->removeCardFromTable(card);
 					counter++;
 				}
 			});
+			m_gunCallback->send(m_character);
 			break;
 		}
 		default:
@@ -77,15 +72,4 @@ std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
 	}
 	
 	return cards;
-}
-
-void RowingController::sendCards(const CharacterPtr & to,
-								 const std::vector<NavigationCardPtr> & cards,
-								 const std::function<void(const std::vector<size_t> &)> & callback) {
-	callback(m_cardSender(to, cards));
-}
-
-void RowingController::sendUsingGunQuery(const CharacterPtr & sendTo,
-										 const std::function<void(bool)> & callback) {
-	callback(m_usingGunQuery(sendTo));
 }

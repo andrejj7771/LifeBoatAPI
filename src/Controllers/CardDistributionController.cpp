@@ -6,7 +6,7 @@
 
 CardDistributionController::CardDistributionController(const std::vector<ProvisionCardPtr> & provCards) :
 	m_provisionCards(provCards),
-	m_callback(std::make_shared<callback>("DistributionCallback"))
+	m_callback(std::make_shared<DC_Callback>("DC_Callback"))
 {}
 
 void CardDistributionController::setChracters(const std::vector<CharacterPtr> & characters) {
@@ -17,7 +17,7 @@ const std::vector<ProvisionCardPtr> & CardDistributionController::getProvisionCa
 	return m_provisionCards;
 }
 
-CallbackPtr CardDistributionController::getCallback() const {
+DC_CallbackPtr CardDistributionController::getCallback() const {
 	return m_callback;
 }
 

@@ -3,6 +3,8 @@
 
 #include "LifeboatAPI_global.h"
 
+#include "Utils/Callback.h"
+
 #include <memory>
 #include <vector>
 #include <functional>
@@ -13,8 +15,13 @@ class NavigationCard;
 using CharacterPtr = std::shared_ptr<Character>;
 using NavigationCardPtr = std::shared_ptr<NavigationCard>;
 
-using Sender = std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)>;
-using Query = std::function<bool(const CharacterPtr &)>;
+using RC_CardCallback = Callback<std::vector<size_t>,
+								 const CharacterPtr &,
+								 const std::vector<NavigationCardPtr> &>;
+using RC_GunCallback = Callback<bool, const CharacterPtr&>;
+
+using RC_CardCallbackPtr = std::shared_ptr<RC_CardCallback>;
+using RC_GunCallbackPtr = std::shared_ptr<RC_GunCallback>;
 
 class LIFEBOAT_API RowingController {
 	
@@ -23,16 +30,16 @@ class LIFEBOAT_API RowingController {
 	std::vector<NavigationCardPtr> m_navigationCards;
 	std::vector<NavigationCardPtr> m_currentCards;
 	
-	Sender m_cardSender;
-	Query m_usingGunQuery;
+	RC_CardCallbackPtr m_cardCallback;
+	RC_GunCallbackPtr m_gunCallback;
 	
 public:
 	
 	RowingController(const std::vector<NavigationCardPtr> & navCards);
 	~RowingController() = default;
 	
-	void setCardSender(const Sender & sender);
-	void setUsingGunQuery(const Query & query);
+	RC_CardCallbackPtr getCardCallback() const;
+	RC_GunCallbackPtr getGunCallback() const;
 	
 	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	const std::vector<NavigationCardPtr> & getCurrentNavCards() const;
@@ -46,13 +53,6 @@ public:
 private:
 	
 	std::vector<NavigationCardPtr> getCurrentCards();
-	
-	void sendCards(const CharacterPtr & to,
-				   const std::vector<NavigationCardPtr> & cards,
-				   const std::function<void(const std::vector<size_t> &)> & callback);
-	
-	void sendUsingGunQuery(const CharacterPtr & sendTo,
-						   const std::function<void(bool)> & callback);
 	
 };
 

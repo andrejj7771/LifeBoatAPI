@@ -27,8 +27,21 @@ using ActionControllerPtr = std::shared_ptr<ActionController>;
 using IterationTotalControllerPtr = std::shared_ptr<IterationTotalController>;
 using CardDistributionControllerPtr = std::shared_ptr<CardDistributionController>;
 
-using distributionCallback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
-using distributionCallbackPtr = std::shared_ptr<distributionCallback>;
+using AC_ActionCallback = Callback<ActionData, const CharacterPtr&>;
+using AC_FightCallback = Callback<bool, const CharacterPtr&, const CharacterPtr&>;
+using DC_Callback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
+using FC_Callback = Callback<int, const CharacterPtr&, const CharacterPtr&, const CharacterPtr&>;
+using RC_CardCallback = Callback<std::vector<size_t>,
+								 const CharacterPtr &,
+								 const std::vector<NavigationCardPtr> &>;
+using RC_GunCallback = Callback<bool, const CharacterPtr&>;
+
+using AC_ActionCallbackPtr = std::shared_ptr<AC_ActionCallback>;
+using AC_FightCallbackPtr = std::shared_ptr<AC_FightCallback>;
+using DC_CallbackPtr = std::shared_ptr<DC_Callback>;
+using FC_CallbackPtr = std::shared_ptr<FC_Callback>;
+using RC_CardCallbackPtr = std::shared_ptr<RC_CardCallback>;
+using RC_GunCallbackPtr = std::shared_ptr<RC_GunCallback>;
 
 enum class totalPhase : int;
 
@@ -65,15 +78,14 @@ public:
 	
 	const std::vector<CharacterPtr> & getCharacters() const;
 	
-	distributionCallbackPtr getDistributionCallback() const;
-	void setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender);
-	void setRowingCardSender(const std::function<std::vector<size_t>( const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
-	void setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	
-	void setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)> & query);
-	void setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query);
-	void setFightControllerFightQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query);
-	void setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query);
+	AC_ActionCallbackPtr getAC_ActionCallback() const;
+	AC_FightCallbackPtr getAC_FightCallback() const;
+	DC_CallbackPtr getDC_Callback() const;
+	FC_CallbackPtr getFC_Callback() const;
+	RC_CardCallbackPtr getRC_CardCallback() const;
+	RC_GunCallbackPtr getRC_GunCallback() const;
+	void setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	void setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query);
 	void setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query);
 	
