@@ -3,6 +3,8 @@
 
 #include "LifeboatAPI_global.h"
 
+#include "Utils/Callback.h"
+
 #include <functional>
 #include <memory>
 #include <vector>
@@ -24,6 +26,9 @@ using NavigationCardPtr = std::shared_ptr<NavigationCard>;
 using ActionControllerPtr = std::shared_ptr<ActionController>;
 using IterationTotalControllerPtr = std::shared_ptr<IterationTotalController>;
 using CardDistributionControllerPtr = std::shared_ptr<CardDistributionController>;
+
+using distributionCallback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
+using distributionCallbackPtr = std::shared_ptr<distributionCallback>;
 
 enum class totalPhase : int;
 
@@ -60,6 +65,7 @@ public:
 	
 	const std::vector<CharacterPtr> & getCharacters() const;
 	
+	distributionCallbackPtr getDistributionCallback() const;
 	void setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender);
 	void setRowingCardSender(const std::function<std::vector<size_t>( const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	void setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);

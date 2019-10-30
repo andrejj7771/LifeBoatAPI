@@ -64,11 +64,8 @@ const std::vector<CharacterPtr> & LogicController::getCharacters() const {
 	return m_characters;
 }
 
-void LogicController::setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender) {
-	if (m_distributionController == nullptr)
-		return;
-	
-	m_distributionController->setSender(sender);
+distributionCallbackPtr LogicController::getDistributionCallback() const {
+	return m_distributionController->getCallback();
 }
 
 void LogicController::setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
