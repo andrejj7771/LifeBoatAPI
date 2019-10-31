@@ -3,17 +3,8 @@
 
 #include "LifeboatAPI_global.h"
 
-#include <functional>
-#include <memory>
-#include <vector>
-
-class Character;
-class NavigationCard;
-class ProvisionCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
+#include "Utils/Callback.h"
+#include "Utils/Utils.h"
 
 class FightController;
 class RowingController;
@@ -21,24 +12,6 @@ class RowingController;
 using FightControllerPtr = std::shared_ptr<FightController>;
 using RowingControllerPtr = std::shared_ptr<RowingController>;
 
-struct ActionData {
-	int actionType;
-	CharacterPtr object;
-	size_t cardIndex;
-	bool hand;
-	
-	ActionData() {
-		clear();
-	}
-	
-	void clear() {
-		actionType = 0;
-		object = nullptr;
-		cardIndex = 0;
-		hand = false;
-	}
-	
-};
 
 class LIFEBOAT_API ActionController {
 	
@@ -49,8 +22,8 @@ class LIFEBOAT_API ActionController {
 	std::vector<CharacterPtr> m_newSequence;
 	std::vector<NavigationCardPtr> m_navigationCards;
 	
-	std::function<void(const CharacterPtr &, ActionData & data)> m_actionQuery;
-	std::function<bool(const CharacterPtr &, const CharacterPtr &)> m_fightQuery;
+	AC_ActionCallbackPtr m_actionCallback;
+	AC_FightCallbackPtr m_fightCallback;
 	
 public:
 	
@@ -67,12 +40,11 @@ public:
 	void setNavigationCards(const std::vector<NavigationCardPtr> & navigationCards);
 	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	
-	void setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)>& query);
-	void setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query);
-	
-	void setRowingCardSender(const std::function<std::vector<size_t>(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
-	void setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query);
-	void setFightingQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query);
+	AC_ActionCallbackPtr getAC_ActionCallback() const;
+	AC_FightCallbackPtr getAC_FightCallback() const;
+	RC_CardCallbackPtr getRC_CardCallback() const;
+	RC_GunCallbackPtr getRC_GunCallback() const;
+	FC_CallbackPtr getFC_Callback() const;
 	
 	bool init();
 	
@@ -96,16 +68,7 @@ private:
 	bool initFightController();
 	bool initRowingController();
 	
-	void sendActionQuery(const CharacterPtr & to,
-						 ActionData & data,
-						 const std::function<void(ActionData &)> & callback);
-	
-	void sendFightQuery(const CharacterPtr & subject,
-						const CharacterPtr & object,
-						const std::function<void(bool)> & callback);
-	
 	void callback(ActionData & data, std::vector<CharacterPtr>::iterator & current);
-	
 };
 
 #endif // MOVINGCONTROLLER_H

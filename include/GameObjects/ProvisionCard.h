@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-enum class provision_t : int {
+enum class provision_e : char {
 	Unknown = -1,
 	FlareGun = 0,
 	LifePreserver = 1,
@@ -24,7 +24,7 @@ enum class provision_t : int {
 
 class LIFEBOAT_API ProvisionCard : public GameObject {
 	
-	provision_t m_cType;
+	provision_e m_cType;
 	std::string m_name;
 	
 public:
@@ -32,7 +32,7 @@ public:
 	ProvisionCard();
 	~ProvisionCard() override = default;
 	
-	provision_t getCardType() const;
+	provision_e getCardType() const;
 	
 	const std::string & getName() const;
 	

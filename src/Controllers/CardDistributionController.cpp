@@ -5,7 +5,8 @@
 #include <functional>
 
 CardDistributionController::CardDistributionController(const std::vector<ProvisionCardPtr> & provCards) :
-	m_provisionCards(provCards)
+	m_provisionCards(provCards),
+	m_callback(std::make_shared<DC_Callback>("DC_Callback"))
 {}
 
 void CardDistributionController::setChracters(const std::vector<CharacterPtr> & characters) {
@@ -14,6 +15,10 @@ void CardDistributionController::setChracters(const std::vector<CharacterPtr> & 
 
 const std::vector<ProvisionCardPtr> & CardDistributionController::getProvisionCards() const {
 	return m_provisionCards;
+}
+
+DC_CallbackPtr CardDistributionController::getCallback() const {
+	return m_callback;
 }
 
 void CardDistributionController::execute() {
@@ -25,8 +30,7 @@ void CardDistributionController::execute() {
 		if (cards.size() == 0)
 			break;
 		
-		sendCards(*currentCharacter, cards,
-				  [&cards, &currentCharacter](long index) mutable
+		m_callback->setReceiver([&cards, &currentCharacter](long index) mutable
 		{
 			if (index < 0) {
 				currentCharacter++;
@@ -39,19 +43,8 @@ void CardDistributionController::execute() {
 			cards.erase(it);
 			currentCharacter++;
 		});
+		m_callback->send(*currentCharacter, cards);
 	}
-	
-}
-
-void CardDistributionController::setSender(const senderFunction & func) {
-	m_sender = func;
-}
-
-void CardDistributionController::sendCards(const CharacterPtr & to,
-										   const std::vector<ProvisionCardPtr> & cards,
-										   const callbackFunction & callback)
-{
-	callback(m_sender(to, cards));
 }
 
 std::vector<ProvisionCardPtr> CardDistributionController::getCurrentCards() {

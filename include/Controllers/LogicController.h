@@ -3,31 +3,18 @@
 
 #include "LifeboatAPI_global.h"
 
-#include <functional>
-#include <memory>
-#include <vector>
-
-class Character;
-class NavigationCard;
-class ProvisionCard;
+#include "Utils/Callback.h"
+#include "Utils/Utils.h"
 
 class ActionController;
 class IterationTotalController;
 class CardDistributionController;
 
-struct ActionData;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-
 using ActionControllerPtr = std::shared_ptr<ActionController>;
 using IterationTotalControllerPtr = std::shared_ptr<IterationTotalController>;
 using CardDistributionControllerPtr = std::shared_ptr<CardDistributionController>;
 
-enum class totalPhase : int;
-
-enum class phase_t : int {
+enum class phase_e : char {
 	Initialization = -1,
 	CardDistributionPhase = 0,
 	MovingPhase = 1,
@@ -44,7 +31,7 @@ class LIFEBOAT_API LogicController {
 	ActionControllerPtr m_actionController;
 	IterationTotalControllerPtr m_iterationTotalController;
 	
-	phase_t m_currentPhase;
+	phase_e m_currentPhase;
 	size_t m_birdsCounter;
 	
 public:
@@ -60,16 +47,17 @@ public:
 	
 	const std::vector<CharacterPtr> & getCharacters() const;
 	
-	void setDistributionCardSender(const std::function<long(const CharacterPtr &, const std::vector<ProvisionCardPtr> &)> & sender);
-	void setRowingCardSender(const std::function<std::vector<size_t>( const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
-	void setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender);
 	
-	void setActionQuery(const std::function<void(const CharacterPtr &, ActionData & data)> & query);
-	void setFightQuery(const std::function<bool(const CharacterPtr &, const CharacterPtr &)> & query);
-	void setFightControllerFightQuery(const std::function<int(const CharacterPtr &, const CharacterPtr &, const CharacterPtr &)> & query);
-	void setRowingUsingGunQuery(const std::function<bool(const CharacterPtr &)> & query);
-	void setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query);
-	void setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query);
+	AC_ActionCallbackPtr getAC_ActionCallback() const;
+	AC_FightCallbackPtr getAC_FightCallback() const;
+	DC_CallbackPtr getDC_Callback() const;
+	FC_CallbackPtr getFC_Callback() const;
+	RC_CardCallbackPtr getRC_CardCallback() const;
+	RC_GunCallbackPtr getRC_GunCallback() const;
+	ITC_CardCallbackPtr getITC_CardCallback() const;
+	ITC_UsingCardCallbackPtr getITC_UsingCardCallback() const;
+	ITC_WaterCallbackPtr getITC_WaterCallback() const;
+	ITC_PreserverCallbackPtr getITC_PreserverCallback() const;
 	
 private:
 	

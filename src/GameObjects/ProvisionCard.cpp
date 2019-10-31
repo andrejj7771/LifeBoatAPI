@@ -1,8 +1,8 @@
 #include "GameObjects/ProvisionCard.h"
 
-ProvisionCard::ProvisionCard() : GameObject(obj_t::ProvisionCard) {}
+ProvisionCard::ProvisionCard() : GameObject(obj_e::ProvisionCard) {}
 
-provision_t ProvisionCard::getCardType() const {
+provision_e ProvisionCard::getCardType() const {
 	return m_cType;
 }
 
@@ -12,6 +12,6 @@ const std::string & ProvisionCard::getName() const {
 
 bool ProvisionCard::onLoad(const rapidjson::Value & doc) {
 	m_name = doc["name"].GetString();
-	m_cType = static_cast<provision_t>(doc["type"].GetInt());
+	m_cType = static_cast<provision_e>(doc["type"].GetInt());
 	return true;
 }

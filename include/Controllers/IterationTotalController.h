@@ -3,28 +3,14 @@
 
 #include "LifeboatAPI_global.h"
 
-#include "GameObjects/Character.h"
+#include "Utils/Callback.h"
+#include "Utils/Utils.h"
 
-#include <functional>
-#include <memory>
-#include <vector>
-
-class ProvisionCard;
-class NavigationCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-
-enum class totalPhase : int {
+enum class TotalPhase : int {
 	Unknown = -1,
 	Overboard = 0,
 	Dehydration = 1
 };
-
-using Sender = std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)>;
-using UsingCardQuery = std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)>;
-using HealQuery = std::function<CharacterPtr(const CharacterPtr &)>;
 
 class LIFEBOAT_API IterationTotalController {
 	
@@ -38,13 +24,14 @@ class LIFEBOAT_API IterationTotalController {
 	std::vector<CharacterPtr> m_overboard;
 	std::vector<CharacterPtr> m_dehydrated;
 	
-	Sender m_cardSender;
-	UsingCardQuery m_usingCardQuery;
-	HealQuery m_healQuery;
+	ITC_CardCallbackPtr m_cardCallback;
+	ITC_WaterCallbackPtr m_waterCallback;
+	ITC_PreserverCallbackPtr m_preserverCallback;
+	ITC_UsingCardCallbackPtr m_usingCardCallback;
 	
 	std::vector<NavigationCardPtr> m_birdCards;
 	
-	totalPhase m_currentPhase;
+	TotalPhase m_currentPhase;
 	
 public:
 	
@@ -60,27 +47,21 @@ public:
 	void setRowers(const std::vector<CharacterPtr> & rowers);
 	void setCurrentNavCards(const std::vector<NavigationCardPtr> & cards);
 	
-	const std::vector<NavigationCardPtr> & getNavigationCards() const;
+	ITC_CardCallbackPtr getITC_CardCallback() const;
+	ITC_WaterCallbackPtr getITC_WaterCallback() const;
+	ITC_PreserverCallbackPtr getITC_PreserverCallback() const;
+	ITC_UsingCardCallbackPtr getITC_UsingCardCallback() const;
 	
-	void setCardSender(const Sender & sender);
-	void setUsingCardQuery(const UsingCardQuery & query);
-	void setHealQuery(const HealQuery & query);
+	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	
 	void execute();
 	
 private:
 	
-	void convertTypesToCharacters(const std::vector<character_t> & types,
+	void convertTypesToCharacters(const std::vector<character_e> & types,
 								  std::vector<CharacterPtr> & characters);
 	
-	void usingCardQueryCallback(const CharacterPtr & from,
-								const ProvisionCardPtr & card);
-	
-	void sendCard(const CharacterPtr & to, const std::function<void(size_t)> & usingCardQueryCallback);
-	void sendUsingCardQuery(const CharacterPtr & to,
-							const std::function<void(const CharacterPtr &,
-													 const ProvisionCardPtr &)> & usingCardQueryCallback);
-	void sendQuery(const CharacterPtr & to, const std::function<void(const CharacterPtr &)> & callback);
+	void usingCardQueryCallback(const ActionData & data);
 	
 };
 

@@ -3,16 +3,11 @@
 
 #include "LifeboatAPI_global.h"
 
-#include <functional>
-#include <vector>
-#include <memory>
+#include "Utils/Callback.h"
+#include "Utils/Utils.h"
 
-class Character;
-using CharacterPtr = std::shared_ptr<Character>;
-
-using FightQuery = std::function<int(const CharacterPtr &,
-										const CharacterPtr &,
-										const CharacterPtr &)>;
+using FC_Callback = Callback<int, const CharacterPtr&, const CharacterPtr&, const CharacterPtr&>;
+using FC_CallbackPtr = std::shared_ptr<FC_Callback>;
 
 class LIFEBOAT_API FightController {
 	
@@ -24,7 +19,7 @@ class LIFEBOAT_API FightController {
 	std::vector<CharacterPtr> m_characters;
 	std::vector<CharacterPtr> m_fighters;
 	
-	FightQuery m_fightQuery;
+	FC_CallbackPtr m_callback;
 	
 public:
 	
@@ -39,16 +34,11 @@ public:
 	const std::vector<CharacterPtr> & getFighters() const;
 	const CharacterPtr & getWinner() const;
 	
-	void setFightQuery(const FightQuery & query);
+	FC_CallbackPtr getCallback() const;
 	
 	void clear();
 	
 private:
-	
-	void sendFightQuery(const CharacterPtr & to,
-						const CharacterPtr & subject,
-						const CharacterPtr & object,
-						const std::function<void(int, const CharacterPtr &)> & callback);
 	
 	int getTeamTotal(const std::vector<CharacterPtr> & team);
 	void fightTotal();

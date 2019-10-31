@@ -2,11 +2,10 @@
 #include "GameObjects/Character.h"
 #include "GameObjects/ProvisionCard.h"
 
-#include <algorithm>
-
 FightController::FightController(const std::vector<CharacterPtr> & characters) :
 	m_winner(nullptr),
-	m_characters(characters)
+	m_characters(characters),
+	m_callback(std::make_shared<FC_Callback>("FC_Callback"))
 {}
 
 void FightController::startFight(const CharacterPtr & subject,
@@ -28,23 +27,20 @@ void FightController::startFight(const CharacterPtr & subject,
 			continue;
 		}
 		
-		sendFightQuery(*characterIt, subject, object,
-					   [this, &characterIt](int side, const CharacterPtr & character)
-		{
+		m_callback->setReceiver([this, &characterIt](int side) {
 			if (side == 1) {
-				m_aTeam.push_back(character);
+				m_aTeam.push_back(*characterIt);
 			} else if (side == 2) {
-				m_bTeam.push_back(character);
+				m_bTeam.push_back(*characterIt);
 			}
 			
 			if (side != 0) {
-				if (std::find(m_fighters.begin(), m_fighters.end(), character) != m_fighters.end()) {
-					m_fighters.push_back(character);
+				if (std::find(m_fighters.begin(), m_fighters.end(), *characterIt) != m_fighters.end()) {
+					m_fighters.push_back(*characterIt);
 				}
 			}
-			
-			characterIt++;
 		});
+		m_callback->send(*characterIt, subject, object);
 	}
 	
 	fightTotal();
@@ -64,22 +60,14 @@ const CharacterPtr & FightController::getWinner() const {
 	return m_winner;
 }
 
-void FightController::setFightQuery(const FightQuery &query) {
-	m_fightQuery = query;
+FC_CallbackPtr FightController::getCallback() const {
+	return m_callback;
 }
 
 void FightController::clear() {
 	m_aTeam.clear();
 	m_bTeam.clear();
 	m_fighters.clear();
-}
-
-void FightController::sendFightQuery(const CharacterPtr & to,
-									 const CharacterPtr & subject,
-									 const CharacterPtr & object,
-									 const std::function<void(int, const CharacterPtr &)> & callback) {
-	int resp = m_fightQuery(to, subject, object);
-	callback(resp, to);
 }
 
 int FightController::getTeamTotal(const std::vector<CharacterPtr> & team) {
@@ -91,7 +79,7 @@ int FightController::getTeamTotal(const std::vector<CharacterPtr> & team) {
 		std::vector<ProvisionCardPtr> toRemove;
 		for (size_t i = 0; i < numHandCards; ++i) {
 			auto aHandCard = a->getHandCard(i);
-			if (aHandCard->getCardType() == provision_t::FlareGun)
+			if (aHandCard->getCardType() == provision_e::FlareGun)
 				toRemove.push_back(aHandCard);
 		}
 		
