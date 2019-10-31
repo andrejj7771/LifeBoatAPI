@@ -170,6 +170,7 @@ void IterationTotalController::execute() {
 			m_currentPhase = TotalPhase::Unknown;
 		}
 	};
+	
 	if (m_currentCards.size() == 1) {
 		solve(*m_currentCards.begin(), 0);
 	} else {
@@ -178,7 +179,7 @@ void IterationTotalController::execute() {
 			auto card = m_currentCards.at(index);
 			solve(card, index);
 		});
-		m_cardCallback->send(*characterIter);
+		m_cardCallback->send(*characterIter, m_currentCards);
 	}
 	
 	m_fighters.clear();

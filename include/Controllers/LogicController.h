@@ -47,7 +47,6 @@ public:
 	
 	const std::vector<CharacterPtr> & getCharacters() const;
 	
-	
 	AC_ActionCallbackPtr getAC_ActionCallback() const;
 	AC_FightCallbackPtr getAC_FightCallback() const;
 	DC_CallbackPtr getDC_Callback() const;

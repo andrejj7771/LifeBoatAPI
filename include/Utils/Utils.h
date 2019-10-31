@@ -31,7 +31,7 @@ using RC_CardCallback = Callback<std::vector<size_t>,
 								 const CharacterPtr &,
 								 const std::vector<NavigationCardPtr> &>;
 using RC_GunCallback = Callback<bool, const CharacterPtr&>;
-using ITC_CardCallback = Callback<size_t, const CharacterPtr&>;
+using ITC_CardCallback = Callback<size_t, const CharacterPtr&, const std::vector<NavigationCardPtr>&>;
 using ITC_UsingCardCallback = Callback<ActionData, const CharacterPtr&>;
 using ITC_WaterCallback = Callback<CharacterPtr, const CharacterPtr&>;
 using ITC_PreserverCallback = Callback<CharacterPtr, const CharacterPtr&>;
@@ -50,11 +50,11 @@ using ITC_PreserverCallbackPtr = std::shared_ptr<ITC_PreserverCallback>;
 enum class character_e : char;
 
 enum class action_e : char {
-	Unknown = -1,
-	Robbing = 0,
-	Swappin = 1,
-	Rowing = 2,
-	CardUsing = 3
+	Skip = 0,
+	Robbing = 1,
+	Swappin = 2,
+	Rowing = 3,
+	CardUsing = 4
 };
 
 enum class phase_e : char;
@@ -72,7 +72,7 @@ struct ActionData {
 	}
 	
 	void clear() {
-		action_type = action_e::Unknown;
+		action_type = action_e::Skip;
 		object = nullptr;
 		card_index = 0;
 		hand_card = false;
