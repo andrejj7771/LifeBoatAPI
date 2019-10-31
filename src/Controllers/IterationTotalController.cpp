@@ -6,9 +6,12 @@
 #include <algorithm>
 
 IterationTotalController::IterationTotalController() :
-	m_cardCallback(std::make_shared<ITC_CardCallback>("ITC_CardCallback"))
+	m_cardCallback(std::make_shared<ITC_CardCallback>("ITC_CardCallback")),
+	m_waterCallback(std::make_shared<ITC_WaterCallback>("ITC_WaterCallback")),
+	m_preserverCallback(std::make_shared<ITC_PreserverCallback>("ITC_PreserverCallback")),
+	m_usingCardCallback(std::make_shared<ITC_UsingCardCallback>("ITC_UsingCardCallback"))
 {
-	m_currentPhase = totalPhase::Unknown;
+	m_currentPhase = TotalPhase::Unknown;
 }
 
 size_t IterationTotalController::getNumBirds() const {
@@ -39,46 +42,60 @@ ITC_CardCallbackPtr IterationTotalController::getITC_CardCallback() const {
 	return m_cardCallback;
 }
 
+ITC_WaterCallbackPtr IterationTotalController::getITC_WaterCallback() const {
+	return m_waterCallback;
+}
+
+ITC_PreserverCallbackPtr IterationTotalController::getITC_PreserverCallback() const {
+	return m_preserverCallback;
+}
+
+ITC_UsingCardCallbackPtr IterationTotalController::getITC_UsingCardCallback() const {
+	return m_usingCardCallback;
+}
+
 const std::vector<NavigationCardPtr> & IterationTotalController::getNavigationCards() const {
 	return m_navigationCards;
 }
 
-void IterationTotalController::usingCardQueryCallback(const CharacterPtr & from,
-													  const ProvisionCardPtr & card)
-{
+void IterationTotalController::usingCardQueryCallback(const ActionData & data) {
+	auto card = data.object->getHandCard(data.card_index);
 	if (card == nullptr)
 		return;
 	
 	auto cardType = card->getCardType();
 	auto bind = std::bind(&IterationTotalController::usingCardQueryCallback,
-						  this, std::placeholders::_1, std::placeholders::_2);
-	if (m_currentPhase == totalPhase::Overboard) {
-		if (cardType != provision_t::Chum && cardType != provision_t::LifePreserver) {
-			sendUsingCardQuery(from, bind);
+						  this, std::placeholders::_1);
+	if (m_currentPhase == TotalPhase::Overboard) {
+		if (cardType != provision_e::Chum && cardType != provision_e::LifePreserver) {
+			m_usingCardCallback->setReceiver(bind);
+			m_usingCardCallback->send(data.object);
 		} else {
-			if (cardType == provision_t::Chum) {
+			if (cardType == provision_e::Chum) {
 				for (const CharacterPtr & c : m_overboard) {
-					auto chum = findCardByType(from, provision_t::Chum, false);
-					from->removeCardFromTable(chum);
+					auto chum = findCardByType(data.object, provision_e::Chum, false);
+					data.object->removeCardFromTable(chum);
 					c->incCriticalHit();
 				}
-			} else if (cardType == provision_t::LifePreserver) {
-				sendQuery(from, [&from](const CharacterPtr & c){
-					auto preserver = findCardByType(from, provision_t::LifePreserver, false);
-					from->removeCardFromTable(preserver);
+			} else if (cardType == provision_e::LifePreserver) {
+				m_preserverCallback->setReceiver([&data](const CharacterPtr & c) {
+					auto preserver = findCardByType(data.object, provision_e::LifePreserver, false);
+					data.object->removeCardFromTable(preserver);
 					c->decCriticalHit();
 				});
+				m_preserverCallback->send(data.object);
 			}
 		}
-	} else if (m_currentPhase == totalPhase::Dehydration) {
-		if (cardType != provision_t::Water) {
-			sendUsingCardQuery(from, bind);
+	} else if (m_currentPhase == TotalPhase::Dehydration) {
+		if (cardType != provision_e::Water) {
+			m_usingCardCallback->send(data.object);
 		} else {
-			sendQuery(from, [&from](const CharacterPtr & c){
-				auto water = findCardByType(from, provision_t::Water, true);
-				from->removeCardFromTable(water);
+			m_waterCallback->setReceiver([&data](const CharacterPtr & c){
+				auto water = findCardByType(data.object, provision_e::Water, true);
+				data.object->removeCardFromTable(water);
 				c->decWaterHit();
 			});
+			m_waterCallback->send(data.object);
 		}
 	}
 }
@@ -103,11 +120,11 @@ void IterationTotalController::execute() {
 		
 		//overboard characters
 		{
-			m_currentPhase = totalPhase::Overboard;
+			m_currentPhase = TotalPhase::Overboard;
 			convertTypesToCharacters(card->getOverboard(), m_overboard);
 			for (auto character : m_overboard) {
-				if (character->getCharacterType() != character_t::Frenchy &&
-						hasCard(character, provision_t::LifePreserver, true)) {
+				if (character->getCharacterType() != character_e::Frenchy &&
+						hasCard(character, provision_e::LifePreserver, true)) {
 					character->incCriticalHit();
 				}
 				
@@ -118,14 +135,13 @@ void IterationTotalController::execute() {
 				if (std::find(m_overboard.begin(), m_overboard.end(), character) != m_overboard.end())
 					continue;
 				
-				sendUsingCardQuery(character, std::bind(&IterationTotalController::usingCardQueryCallback,
-														this, std::placeholders::_1, std::placeholders::_2));
+				m_usingCardCallback->send(character);
 			}
 		}
 		
 		//dehydrated characters
 		{
-			m_currentPhase = totalPhase::Dehydration;
+			m_currentPhase = TotalPhase::Dehydration;
 			convertTypesToCharacters(card->getThirsty(), m_dehydrated);
 			
 			auto find = [](const std::vector<CharacterPtr> & src, const CharacterPtr & target) -> bool {
@@ -148,11 +164,10 @@ void IterationTotalController::execute() {
 			}
 			
 			for (const CharacterPtr & character : m_dehydrated) {
-				sendUsingCardQuery(character, std::bind(&IterationTotalController::usingCardQueryCallback,
-														this, std::placeholders::_1, std::placeholders::_2));
+				m_usingCardCallback->send(character);
 			}
 			
-			m_currentPhase = totalPhase::Unknown;
+			m_currentPhase = TotalPhase::Unknown;
 		}
 	};
 	if (m_currentCards.size() == 1) {
@@ -175,8 +190,9 @@ void IterationTotalController::execute() {
 		m_navigationCards.push_back(card);
 }
 
-void IterationTotalController::convertTypesToCharacters(const std::vector<character_t> & types,
-														std::vector<CharacterPtr> & characters) {
+void IterationTotalController::convertTypesToCharacters(const std::vector<character_e> & types,
+														std::vector<CharacterPtr> & characters)
+{
 	for (auto type : types) {
 		for (const CharacterPtr & character : m_characters) {
 			if (character->getCharacterType() == type) {
@@ -185,18 +201,4 @@ void IterationTotalController::convertTypesToCharacters(const std::vector<charac
 			}
 		}
 	}
-}
-
-void IterationTotalController::sendUsingCardQuery(const CharacterPtr & to,
-												  const std::function<void(const CharacterPtr &,
-																		   const ProvisionCardPtr &)> & callback) {
-	if (m_currentPhase == totalPhase::Unknown)
-		return;
-	
-	callback(to, m_usingCardQuery(to, m_currentPhase));
-}
-
-void IterationTotalController::sendQuery(const CharacterPtr & to,
-				const std::function<void(const CharacterPtr &)> & callback) {
-	callback(m_healQuery(to));
 }

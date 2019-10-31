@@ -4,24 +4,7 @@
 #include "LifeboatAPI_global.h"
 
 #include "Utils/Callback.h"
-
-#include <memory>
-#include <vector>
-#include <functional>
-
-class Character;
-class NavigationCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-
-using RC_CardCallback = Callback<std::vector<size_t>,
-								 const CharacterPtr &,
-								 const std::vector<NavigationCardPtr> &>;
-using RC_GunCallback = Callback<bool, const CharacterPtr&>;
-
-using RC_CardCallbackPtr = std::shared_ptr<RC_CardCallback>;
-using RC_GunCallbackPtr = std::shared_ptr<RC_GunCallback>;
+#include "Utils/Utils.h"
 
 class LIFEBOAT_API RowingController {
 	
@@ -38,8 +21,8 @@ public:
 	RowingController(const std::vector<NavigationCardPtr> & navCards);
 	~RowingController() = default;
 	
-	RC_CardCallbackPtr getCardCallback() const;
-	RC_GunCallbackPtr getGunCallback() const;
+	RC_CardCallbackPtr getRC_CardCallback() const;
+	RC_GunCallbackPtr getRC_GunCallback() const;
 	
 	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	const std::vector<NavigationCardPtr> & getCurrentNavCards() const;

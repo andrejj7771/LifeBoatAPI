@@ -4,56 +4,14 @@
 #include "LifeboatAPI_global.h"
 
 #include "Utils/Callback.h"
-
-#include <functional>
-#include <memory>
-#include <vector>
-
-class Character;
-class NavigationCard;
-class ProvisionCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
+#include "Utils/Utils.h"
 
 class FightController;
 class RowingController;
 
-struct ActionData {
-	int actionType;
-	CharacterPtr object;
-	size_t cardIndex;
-	bool hand;
-	
-	ActionData() {
-		clear();
-	}
-	
-	void clear() {
-		actionType = 0;
-		object = nullptr;
-		cardIndex = 0;
-		hand = false;
-	}
-};
-
 using FightControllerPtr = std::shared_ptr<FightController>;
 using RowingControllerPtr = std::shared_ptr<RowingController>;
 
-using AC_ActionCallback = Callback<ActionData, const CharacterPtr&>;
-using AC_FightCallback = Callback<bool, const CharacterPtr&, const CharacterPtr&>;
-using FC_Callback = Callback<int, const CharacterPtr&, const CharacterPtr&, const CharacterPtr&>;
-using RC_CardCallback = Callback<std::vector<size_t>,
-								 const CharacterPtr &,
-								 const std::vector<NavigationCardPtr> &>;
-using RC_GunCallback = Callback<bool, const CharacterPtr&>;
-
-using AC_ActionCallbackPtr = std::shared_ptr<AC_ActionCallback>;
-using AC_FightCallbackPtr = std::shared_ptr<AC_FightCallback>;
-using FC_CallbackPtr = std::shared_ptr<FC_Callback>;
-using RC_CardCallbackPtr = std::shared_ptr<RC_CardCallback>;
-using RC_GunCallbackPtr = std::shared_ptr<RC_GunCallback>;
 
 class LIFEBOAT_API ActionController {
 	

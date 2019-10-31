@@ -8,6 +8,14 @@ RowingController::RowingController(const std::vector<NavigationCardPtr> & navCar
 	m_cardCallback(std::make_shared<RC_CardCallback>("RC_CardCallback")),
 	m_gunCallback(std::make_shared<RC_GunCallback>("RC_GunCallback")) {}
 
+RC_CardCallbackPtr RowingController::getRC_CardCallback() const {
+	return m_cardCallback;
+}
+
+RC_GunCallbackPtr RowingController::getRC_GunCallback() const {
+	return m_gunCallback;
+}
+
 const std::vector<NavigationCardPtr> & RowingController::getNavigationCards() const {
 	return m_navigationCards;
 }
@@ -45,12 +53,12 @@ std::vector<NavigationCardPtr> RowingController::getCurrentCards() {
 		auto card = m_character->getTableCard(i);
 		auto cardType = card->getCardType();
 		switch (cardType) {
-		case provision_t::Oar:
-		case provision_t::Compass: {
+		case provision_e::Oar:
+		case provision_e::Compass: {
 			counter++;
 			break;
 		}
-		case provision_t::FlareGun: {
+		case provision_e::FlareGun: {
 			m_gunCallback->setReceiver([this, &counter, &card](bool res){
 				if (res) {
 					m_character->removeCardFromTable(card);

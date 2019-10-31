@@ -7,8 +7,6 @@
 #include "GameObjects/NavigationCard.h"
 #include "GameObjects/ProvisionCard.h"
 
-#include <algorithm>
-
 ActionController::ActionController(const std::vector<CharacterPtr> & characters,
 								   const std::vector<NavigationCardPtr> & navCards) :
 	m_fightController(nullptr),
@@ -52,11 +50,11 @@ AC_FightCallbackPtr ActionController::getAC_FightCallback() const {
 }
 
 RC_CardCallbackPtr ActionController::getRC_CardCallback() const {
-	return m_rowingCotroller->getCardCallback();
+	return m_rowingCotroller->getRC_CardCallback();
 }
 
 RC_GunCallbackPtr ActionController::getRC_GunCallback() const {
-	return m_rowingCotroller->getGunCallback();
+	return m_rowingCotroller->getRC_GunCallback();
 }
 
 FC_CallbackPtr ActionController::getFC_Callback() const {
@@ -101,7 +99,7 @@ void ActionController::RobCharacter(const CharacterPtr & subject,
 		}
 		subject->appendCardToHand(card);
 	} else {
-		if (subject->getCharacterType() == character_t::Kid && hand == true) {
+		if (subject->getCharacterType() == character_e::Kid && hand == true) {
 			object->removeCardFromHand(card);
 			subject->appendCardToHand(card);
 		} else {
@@ -188,15 +186,15 @@ bool ActionController::initRowingController() {
 }
 
 void ActionController::callback(ActionData & data, std::vector<CharacterPtr>::iterator & current) {
-	if (data.actionType == 1) {
-		RobCharacter(*current, data.object, data.cardIndex, data.hand);
-	} else if (data.actionType == 2) {
+	if (data.action_type == action_e::Robbing) {
+		RobCharacter(*current, data.object, data.card_index, data.hand_card);
+	} else if (data.action_type == action_e::Swappin) {
 		SwapPlaces(*current, data.object);
-	} else if (data.actionType == 3) {
+	} else if (data.action_type == action_e::Rowing) {
 		Rowing(*current);
-	} else if (data.actionType == 4) {
+	} else if (data.action_type == action_e::CardUsing) {
 		bool end = false;
-		UseCard(*current, data.object, data.cardIndex, end);
+		UseCard(*current, data.object, data.card_index, end);
 		if (!end) {
 			m_actionCallback->setReceiver([this, &current](ActionData & data){
 				callback(data, current);

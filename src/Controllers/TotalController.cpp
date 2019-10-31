@@ -40,13 +40,13 @@ int TotalController::countScore(const CharacterPtr & character) {
 	for (size_t i = 0; i < tableSize; ++i) {
 		auto card = character->getTableCard(i);
 		auto type = card->getCardType();
-		if (type == provision_t::Money) {
+		if (type == provision_e::Money) {
 			money += 1;
-		} else if (type == provision_t::Jewels) {
+		} else if (type == provision_e::Jewels) {
 			jewels += 1;
-		} else if (type == provision_t::Painting_3) {
+		} else if (type == provision_e::Painting_3) {
 			paintings += 3;
-		} else if (type == provision_t::Painting_2) {
+		} else if (type == provision_e::Painting_2) {
 			paintings += 2;
 		}
 	}
@@ -54,9 +54,9 @@ int TotalController::countScore(const CharacterPtr & character) {
 	jewels = static_cast<int>(std::pow(2, jewels == 1 ? jewels - 1 : jewels));
 	
 	auto type = character->getCharacterType();
-	score += type == character_t::Captain ? money * 2 : money;
-	score += type == character_t::Lauren ? jewels * 2 : jewels;
-	score += type == character_t::Stephen ? paintings * 2 : paintings;
+	score += type == character_e::Captain ? money * 2 : money;
+	score += type == character_e::Lauren ? jewels * 2 : jewels;
+	score += type == character_e::Stephen ? paintings * 2 : paintings;
 	
 	return score;
 }

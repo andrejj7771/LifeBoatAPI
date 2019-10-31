@@ -4,19 +4,7 @@
 #include "LifeboatAPI_global.h"
 
 #include "Utils/Callback.h"
-
-#include <memory>
-#include <vector>
-#include <functional>
-
-class Character;
-class ProvisionCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
-
-using DC_Callback = Callback<long, const CharacterPtr&, std::vector<ProvisionCardPtr>>;
-using DC_CallbackPtr = std::shared_ptr<DC_Callback>;
+#include "Utils/Utils.h"
 
 class LIFEBOAT_API CardDistributionController {
 	

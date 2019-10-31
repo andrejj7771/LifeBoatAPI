@@ -8,8 +8,8 @@
 
 class LIFEBOAT_API NavigationCard : public GameObject {
 	
-	std::vector<character_t> m_overboard;
-	std::vector<character_t> m_thirsty;
+	std::vector<character_e> m_overboard;
+	std::vector<character_e> m_thirsty;
 	
 	bool m_fighters;
 	bool m_rowers;
@@ -24,8 +24,8 @@ public:
 	NavigationCard();
 	virtual ~NavigationCard() override = default;
 	
-	const std::vector<character_t> & getOverboard() const;
-	const std::vector<character_t> & getThirsty() const;
+	const std::vector<character_e> & getOverboard() const;
+	const std::vector<character_e> & getThirsty() const;
 	
 	bool isFighters() const;
 	bool isRowers() const;

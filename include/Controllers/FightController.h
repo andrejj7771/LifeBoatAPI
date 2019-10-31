@@ -4,13 +4,7 @@
 #include "LifeboatAPI_global.h"
 
 #include "Utils/Callback.h"
-
-#include <functional>
-#include <vector>
-#include <memory>
-
-class Character;
-using CharacterPtr = std::shared_ptr<Character>;
+#include "Utils/Utils.h"
 
 using FC_Callback = Callback<int, const CharacterPtr&, const CharacterPtr&, const CharacterPtr&>;
 using FC_CallbackPtr = std::shared_ptr<FC_Callback>;

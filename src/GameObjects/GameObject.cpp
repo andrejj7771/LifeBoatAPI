@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-GameObject::GameObject(obj_t type) {
+GameObject::GameObject(obj_e type) {
 	static size_t id = 0;
 	
 	m_type = type;

@@ -2,8 +2,6 @@
 #include "GameObjects/Character.h"
 #include "GameObjects/ProvisionCard.h"
 
-#include <algorithm>
-
 FightController::FightController(const std::vector<CharacterPtr> & characters) :
 	m_winner(nullptr),
 	m_characters(characters),
@@ -81,7 +79,7 @@ int FightController::getTeamTotal(const std::vector<CharacterPtr> & team) {
 		std::vector<ProvisionCardPtr> toRemove;
 		for (size_t i = 0; i < numHandCards; ++i) {
 			auto aHandCard = a->getHandCard(i);
-			if (aHandCard->getCardType() == provision_t::FlareGun)
+			if (aHandCard->getCardType() == provision_e::FlareGun)
 				toRemove.push_back(aHandCard);
 		}
 		

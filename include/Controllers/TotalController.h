@@ -1,14 +1,7 @@
 #ifndef TOTALCONTROLLER_H
 #define TOTALCONTROLLER_H
 
-#include <vector>
-#include <memory>
-
-class Character;
-class ProvisionCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
+#include "Utils/Utils.h"
 
 class TotalController {
 	

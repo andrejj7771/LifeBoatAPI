@@ -4,32 +4,13 @@
 #include "LifeboatAPI_global.h"
 
 #include "Utils/Callback.h"
+#include "Utils/Utils.h"
 
-#include <functional>
-#include <memory>
-#include <vector>
-
-enum class character_t : int;
-
-class Character;
-class ProvisionCard;
-class NavigationCard;
-
-using CharacterPtr = std::shared_ptr<Character>;
-using ProvisionCardPtr = std::shared_ptr<ProvisionCard>;
-using NavigationCardPtr = std::shared_ptr<NavigationCard>;
-
-enum class totalPhase : int {
+enum class TotalPhase : int {
 	Unknown = -1,
 	Overboard = 0,
 	Dehydration = 1
 };
-
-using ITC_CardCallback = Callback<size_t, const CharacterPtr&>;
-using UsingCardQuery = std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)>;
-using HealQuery = std::function<CharacterPtr(const CharacterPtr &)>;
-
-using ITC_CardCallbackPtr = std::shared_ptr<ITC_CardCallback>;
 
 class LIFEBOAT_API IterationTotalController {
 	
@@ -44,12 +25,13 @@ class LIFEBOAT_API IterationTotalController {
 	std::vector<CharacterPtr> m_dehydrated;
 	
 	ITC_CardCallbackPtr m_cardCallback;
-	UsingCardQuery m_usingCardQuery;
-	HealQuery m_healQuery;
+	ITC_WaterCallbackPtr m_waterCallback;
+	ITC_PreserverCallbackPtr m_preserverCallback;
+	ITC_UsingCardCallbackPtr m_usingCardCallback;
 	
 	std::vector<NavigationCardPtr> m_birdCards;
 	
-	totalPhase m_currentPhase;
+	TotalPhase m_currentPhase;
 	
 public:
 	
@@ -66,6 +48,9 @@ public:
 	void setCurrentNavCards(const std::vector<NavigationCardPtr> & cards);
 	
 	ITC_CardCallbackPtr getITC_CardCallback() const;
+	ITC_WaterCallbackPtr getITC_WaterCallback() const;
+	ITC_PreserverCallbackPtr getITC_PreserverCallback() const;
+	ITC_UsingCardCallbackPtr getITC_UsingCardCallback() const;
 	
 	const std::vector<NavigationCardPtr> & getNavigationCards() const;
 	
@@ -73,16 +58,10 @@ public:
 	
 private:
 	
-	void convertTypesToCharacters(const std::vector<character_t> & types,
+	void convertTypesToCharacters(const std::vector<character_e> & types,
 								  std::vector<CharacterPtr> & characters);
 	
-	void usingCardQueryCallback(const CharacterPtr & from,
-								const ProvisionCardPtr & card);
-	
-	void sendUsingCardQuery(const CharacterPtr & to,
-							const std::function<void(const CharacterPtr &,
-													 const ProvisionCardPtr &)> & usingCardQueryCallback);
-	void sendQuery(const CharacterPtr & to, const std::function<void(const CharacterPtr &)> & callback);
+	void usingCardQueryCallback(const ActionData & data);
 	
 };
 

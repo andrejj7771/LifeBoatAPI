@@ -15,7 +15,7 @@ LogicController::LogicController(const std::vector<CharacterPtr> & characters,
 	m_actionController(nullptr),
 	m_iterationTotalController(nullptr)
 {
-	m_currentPhase = phase_t::Initialization;
+	m_currentPhase = phase_e::Initialization;
 	m_birdsCounter = 0;
 }
 
@@ -39,7 +39,7 @@ bool LogicController::init() {
 		return false;
 	}
 	
-	m_currentPhase = phase_t::CardDistributionPhase;
+	m_currentPhase = phase_e::CardDistributionPhase;
 	
 	return true;
 }
@@ -90,41 +90,42 @@ RC_GunCallbackPtr LogicController::getRC_GunCallback() const {
 	return m_actionController->getRC_GunCallback();
 }
 
-//TODO: replace it with callback
-void LogicController::setIterTotalCardSender(const std::function<size_t(const CharacterPtr &, const std::vector<NavigationCardPtr> &)> & sender) {
-//	m_iterationTotalController->setCardSender(sender);
+ITC_CardCallbackPtr LogicController::getITC_CardCallback() const {
+	return m_iterationTotalController->getITC_CardCallback();
 }
 
-//TODO: replace it with callback
-void LogicController::setIterTotalUsingCardQuery(const std::function<ProvisionCardPtr(const CharacterPtr &, totalPhase)> & query) {
-//	m_iterationTotalController->setUsingCardQuery(query);
+ITC_UsingCardCallbackPtr LogicController::getITC_UsingCardCallback() const {
+	return m_iterationTotalController->getITC_UsingCardCallback();
 }
 
-//TODO: replace it with callback
-void LogicController::setIterTotalHealQuery(const std::function<CharacterPtr(const CharacterPtr &)> & query) {
-//	m_iterationTotalController->setHealQuery(query);
+ITC_WaterCallbackPtr LogicController::getITC_WaterCallback() const {
+	return m_iterationTotalController->getITC_WaterCallback();
+}
+
+ITC_PreserverCallbackPtr LogicController::getITC_PreserverCallback() const {
+	return m_iterationTotalController->getITC_PreserverCallback();
 }
 
 void LogicController::nextPhase() {
 	switch (m_currentPhase) {
-		case phase_t::CardDistributionPhase: {
+		case phase_e::CardDistributionPhase: {
 			m_distributionController->setChracters(m_characters);
 			m_distributionController->execute();
 			
 			m_provisionCards = m_distributionController->getProvisionCards();
-			m_currentPhase = phase_t::MovingPhase;
+			m_currentPhase = phase_e::MovingPhase;
 			break;
 		}
-		case phase_t::MovingPhase: {
+		case phase_e::MovingPhase: {
 			m_actionController->setNavigationCards(m_navigationCards);
 			m_actionController->execute();
 			
 			m_characters = m_actionController->getCheracters();
 			m_navigationCards = m_actionController->getNavigationCards();
-			m_currentPhase = phase_t::TotalPhase;
+			m_currentPhase = phase_e::TotalPhase;
 			break;
 		}
-		case phase_t::TotalPhase: {
+		case phase_e::TotalPhase: {
 			m_iterationTotalController->setCharacters(m_characters);
 			m_iterationTotalController->setNavigationCards(m_navigationCards);
 			m_iterationTotalController->setFighters(m_actionController->getFighters());
@@ -134,7 +135,7 @@ void LogicController::nextPhase() {
 			
 			m_navigationCards = m_iterationTotalController->getNavigationCards();
 			m_birdsCounter = m_iterationTotalController->getNumBirds();
-			m_currentPhase = phase_t::CardDistributionPhase;
+			m_currentPhase = phase_e::CardDistributionPhase;
 			break;
 		}
 		default:

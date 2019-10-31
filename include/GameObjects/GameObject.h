@@ -8,7 +8,7 @@
 
 #include <rapidjson/document.h>
 
-enum class obj_t : int {
+enum class obj_e : char {
 	BaseObject = 0,
 	Character = 1,
 	NavigationCard = 2,
@@ -21,18 +21,18 @@ using GameObjectPtr = std::shared_ptr<GameObject>;
 class LIFEBOAT_API GameObject {
 	
 	size_t m_id;
-	obj_t m_type;
+	obj_e m_type;
 	
 public:
 	
-	explicit GameObject(obj_t type);
+	explicit GameObject(obj_e type);
 	virtual ~GameObject() = default;
 	
 	inline size_t getID() const {
 		return m_id;
 	}
 	
-	inline obj_t getType() const {
+	inline obj_e getType() const {
 		return m_type;
 	}
 	
@@ -64,7 +64,7 @@ public:
 		return cast_ptr != nullptr;
 	}
 	
-	inline bool is(obj_t type) const {
+	inline bool is(obj_e type) const {
 		return m_type == type;
 	}
 	

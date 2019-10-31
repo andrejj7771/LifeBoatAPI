@@ -4,8 +4,8 @@
 #include <algorithm>
 
 Character::Character() :
-	GameObject (obj_t::Character),
-	m_cType(character_t::Unknown)
+	GameObject (obj_e::Character),
+	m_cType(character_e::Unknown)
 {
 	m_size = 3;
 	m_survivalValue = 9;
@@ -201,7 +201,7 @@ CharacterPtr Character::getFriend() const {
 	return m_friend;
 }
 
-character_t Character::getCharacterType() const {
+character_e Character::getCharacterType() const {
 	return m_cType;
 }
 
@@ -214,7 +214,7 @@ void Character::looseCards() {
 			continue;
 		}
 		
-		if ((*cardIterrator)->getCardType() == provision_t::LifePreserver) {
+		if ((*cardIterrator)->getCardType() == provision_e::LifePreserver) {
 			if (m_table.size() == 1) {
 				stop = true;
 				continue;

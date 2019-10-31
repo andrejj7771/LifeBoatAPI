@@ -15,7 +15,7 @@ using CharacterPtr = std::shared_ptr<Character>;
 const static ProvisionCardPtr NullProvision = nullptr;
 
 
-enum class character_t : int {
+enum class character_e : char {
 	Unknown = 0,
 	Lauren = 1,
 	Stephen = 2,
@@ -25,14 +25,14 @@ enum class character_t : int {
 	Kid = 6
 };
 
-static std::map<character_t, std::string> characterNames =
+static std::map<character_e, std::string> characterNames =
 {
-	{	character_t::Lauren, "Lady Lauren"		},
-	{	character_t::Stephen, "Sir Stephen"		},
-	{	character_t::Captain, "The Captain"		},
-	{	character_t::FirstMate, "First Mate"	},
-	{	character_t::Frenchy, "Frenchy"			},
-	{	character_t::Kid, "The Kid"				}
+	{	character_e::Lauren, "Lady Lauren"		},
+	{	character_e::Stephen, "Sir Stephen"		},
+	{	character_e::Captain, "The Captain"		},
+	{	character_e::FirstMate, "First Mate"	},
+	{	character_e::Frenchy, "Frenchy"			},
+	{	character_e::Kid, "The Kid"				}
 };
 
 class LIFEBOAT_API Character : public GameObject {
@@ -55,7 +55,7 @@ class LIFEBOAT_API Character : public GameObject {
 	CharacterPtr m_enemy;
 	CharacterPtr m_friend;
 	
-	character_t m_cType;
+	character_e m_cType;
 	
 	std::string m_name;
 	
@@ -103,14 +103,14 @@ public:
 	void setFriend(CharacterPtr character);
 	CharacterPtr getFriend() const;
 	
-	character_t getCharacterType() const;
+	character_e getCharacterType() const;
 	
 	void looseCards();
 	
 protected:
 	
 	bool onLoad(const rapidjson::Value & doc) override {
-		m_cType = static_cast<character_t>(doc["type"].GetInt());
+		m_cType = static_cast<character_e>(doc["type"].GetInt());
 		m_name = characterNames[m_cType];
 		m_size = doc["size"].GetInt();
 		m_survivalValue = doc["survival"].GetInt();
