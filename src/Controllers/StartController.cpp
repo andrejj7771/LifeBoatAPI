@@ -99,7 +99,7 @@ bool StartController::loadCharacters(std::vector<CharacterPtr> & characters) {
 	if (size == 0)
 		return true;
 	
-	for (size_t i = 0; i <= size; ++i) {
+	for (size_t i = 0; i < size; ++i) {
 		size_t randomValue = uni(g);
 		m_characters.erase(m_characters.begin() + unsigned(randomValue));
 	}
