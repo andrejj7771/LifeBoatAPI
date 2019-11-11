@@ -106,6 +106,7 @@ public:
 	character_e getCharacterType() const;
 	
 	void looseCards();
+	void kill();
 	
 protected:
 	

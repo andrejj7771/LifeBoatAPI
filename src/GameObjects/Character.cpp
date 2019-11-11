@@ -226,3 +226,7 @@ void Character::looseCards() {
 		++cardIterrator;
 	}
 }
+
+void Character::kill() {
+	setCriticalHit(m_size + 1);
+}
